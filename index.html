@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paynless | Financial Command Center</title>
+
+    <!-- Fonts -->
+    <link
+        href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=satoshi@400,500,700&f[]=general-sans@400,500,600&display=swap"
+        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- LEFT SIDEBAR: WALLET & NAV -->
+        <nav class="sidebar-left">
+            <div class="brand">
+                <i class="ph-fill ph-polygon"></i>
+                <span>PAYNLESS</span>
+            </div>
+
+            <div class="wallet-card">
+                <div class="wallet-header">
+                    <span class="label">TOTAL BALANCE</span>
+                    <button class="icon-btn"><i class="ph ph-eye"></i></button>
+                </div>
+                <div class="balance font-mono">₹124,592.00</div>
+                <div class="wallet-stats">
+                    <div class="stat positive">
+                        <span class="label">EARNINGS</span>
+                        <span class="value font-mono">₹12,402</span>
+                    </div>
+                    <div class="stat negative">
+                        <span class="label">SPENDING</span>
+                        <span class="value font-mono">₹4,290</span>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="nav-links">
+                <li class="active"><a href="#"><i class="ph ph-squares-four"></i> Dashboard</a></li>
+                <li><a href="#"><i class="ph ph-chart-line-up"></i> Analytics</a></li>
+                <li><a href="#"><i class="ph ph-arrows-left-right"></i> Transactions</a></li>
+                <li><a href="#"><i class="ph ph-wallet"></i> Cards</a></li>
+                <li><a href="#"><i class="ph ph-gear"></i> Settings</a></li>
+            </ul>
+
+            <div class="user-mini">
+                <div class="avatar">SA</div>
+                <div class="user-info">
+                    <span class="name">Saswatayu</span>
+                    <span class="role">Demor</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="breadcrumbs">
+                    <span>HOME</span> / <span class="current">DASHBOARD</span>
+                </div>
+                <div class="header-actions">
+                    <div class="demo-badge">DEMO ACCOUNT</div>
+                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle Theme">
+                        <i class="ph-fill ph-moon"></i>
+                    </button>
+                </div>
+            </header>
+
+            <div class="content-grid">
+                <!-- DEALS SECTION -->
+                <section class="deals-section">
+                    <div class="section-header">
+                        <h2>EXCLUSIVE DEALS</h2>
+                        <button class="link-btn">VIEW ALL <i class="ph ph-arrow-right"></i></button>
+                    </div>
+                    <div class="deals-scroll">
+                        <div class="deal-card">
+                            <div class="deal-icon"><i class="ph-fill ph-spotify-logo"></i></div>
+                            <div class="deal-info">
+                                <h3>Spotify Premium</h3>
+                                <p>3 Months Free</p>
+                            </div>
+                            <div class="deal-tag">NEW</div>
+                        </div>
+                        <div class="deal-card">
+                            <div class="deal-icon"><i class="ph-fill ph-amazon-logo"></i></div>
+                            <div class="deal-info">
+                                <h3>AWS Credits</h3>
+                                <p>$5000 Startup Plan</p>
+                            </div>
+                            <div class="deal-tag">HOT</div>
+                        </div>
+                        <div class="deal-card">
+                            <div class="deal-icon"><i class="ph-fill ph-notion-logo"></i></div>
+                            <div class="deal-info">
+                                <h3>Notion AI</h3>
+                                <p>20% Off Annual</p>
+                            </div>
+                        </div>
+                        <div class="deal-card">
+                            <div class="deal-icon"><i class="ph-fill ph-figma-logo"></i></div>
+                            <div class="deal-info">
+                                <h3>Figma Pro</h3>
+                                <p>Student Pack</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- PORTFOLIO SECTION -->
+                <section class="portfolio-section">
+                    <div class="section-header">
+                        <h2>PORTFOLIO</h2>
+                        <div class="toggle-switch">
+                            <button class="toggle-btn active" data-type="crypto">CRYPTO</button>
+                            <button class="toggle-btn" data-type="fiat">STOCKS</button>
+                        </div>
+                    </div>
+
+                    <div class="portfolio-list" id="portfolioList">
+                        <!-- Populated by JS -->
+                        <div class="asset-row">
+                            <div class="asset-info">
+                                <div class="asset-icon btc"><i class="ph-fill ph-currency-btc"></i></div>
+                                <div>
+                                    <div class="asset-name">Bitcoin</div>
+                                    <div class="asset-sub">BTC</div>
+                                </div>
+                            </div>
+                            <div class="asset-graph">
+                                <svg width="100" height="30" viewBox="0 0 100 30">
+                                    <path d="M0,15 Q25,5 50,20 T100,10" fill="none" stroke="#ccff00" stroke-width="2" />
+                                </svg>
+                            </div>
+                            <div class="asset-values">
+                                <div class="asset-price font-mono">$94,230.50</div>
+                                <div class="asset-change positive font-mono">+2.4%</div>
+                            </div>
+                        </div>
+                        <div class="asset-row">
+                            <div class="asset-info">
+                                <div class="asset-icon eth"><i class="ph-fill ph-currency-eth"></i></div>
+                                <div>
+                                    <div class="asset-name">Ethereum</div>
+                                    <div class="asset-sub">ETH</div>
+                                </div>
+                            </div>
+                            <div class="asset-graph">
+                                <svg width="100" height="30" viewBox="0 0 100 30">
+                                    <path d="M0,25 Q25,25 50,10 T100,5" fill="none" stroke="#ccff00" stroke-width="2" />
+                                </svg>
+                            </div>
+                            <div class="asset-values">
+                                <div class="asset-price font-mono">$4,120.10</div>
+                                <div class="asset-change positive font-mono">+1.8%</div>
+                            </div>
+                        </div>
+                        <div class="asset-row">
+                            <div class="asset-info">
+                                <div class="asset-icon sol"><i class="ph-fill ph-currency-solana"></i></div>
+                                <!-- Fallback icon if needed -->
+                                <div>
+                                    <div class="asset-name">Solana</div>
+                                    <div class="asset-sub">SOL</div>
+                                </div>
+                            </div>
+                            <div class="asset-graph">
+                                <svg width="100" height="30" viewBox="0 0 100 30">
+                                    <path d="M0,10 Q25,25 50,15 T100,28" fill="none" stroke="#ff4d00"
+                                        stroke-width="2" />
+                                </svg>
+                            </div>
+                            <div class="asset-values">
+                                <div class="asset-price font-mono">₹145.20</div>
+                                <div class="asset-change negative font-mono">-5.2%</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- RIGHT SIDEBAR: AI CHAT WIP!!!-->
+        <aside class="sidebar-right">
+            <div class="chat-header">
+                <div class="status-dot"></div>
+                <span>FINANCE AI</span>
+            </div>
+            <div class="chat-window" id="chatWindow">
+                <div class="message ai">
+                    <p>Good evening. Your portfolio is up 2.4% today. Should I analyze your spending patterns?</p>
+                    <span class="time">10:42 PM</span>
+                </div>
+            </div>
+            <div class="chat-input-area"> <!-- this is just a dummy input! -->
+                <input type="text" id="chatInput" placeholder="Ask anything...">
+                <button id="sendBtn"><i class="ph-fill ph-arrow-right"></i></button>
+            </div>
+        </aside>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
