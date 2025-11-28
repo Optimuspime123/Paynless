@@ -2,12 +2,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- THEME TOGGLE ---
     const themeToggle = document.getElementById('themeToggle');
     const html = document.documentElement;
-    const themeIcon = themeToggle.querySelector('i');
 
-    // local storage or default to dark cause its the best
+    // local storage or default to dark because its the best
     const savedTheme = localStorage.getItem('theme') || 'dark';
     html.setAttribute('data-theme', savedTheme);
-    updateThemeIcon(savedTheme);
 
     themeToggle.addEventListener('click', () => {
         const currentTheme = html.getAttribute('data-theme');
@@ -15,18 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         html.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
-        updateThemeIcon(newTheme);
     });
-
-    function updateThemeIcon(theme) {
-        if (theme === 'dark') {
-            themeIcon.classList.remove('ph-sun');
-            themeIcon.classList.add('ph-moon');
-        } else {
-            themeIcon.classList.remove('ph-moon');
-            themeIcon.classList.add('ph-sun');
-        }
-    }
 
     // --- PORTFOLIO SWITCHER ---
     const toggleBtns = document.querySelectorAll('.toggle-btn');
@@ -93,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- CHAT INTERFACE WIP!!---
+    // --- CHAT INTERFACE ---
     const chatInput = document.getElementById('chatInput');
     const sendBtn = document.getElementById('sendBtn');
     const chatWindow = document.getElementById('chatWindow');
@@ -139,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Enter') handleSend();
     });
 
-    // --- FAKE TRANSACTION HISTORY ---
+    // --- TRANSACTION HISTORY ---
     const transactionData = [
         { name: 'Salary Deposit', date: 'Nov 25', amount: 85000, type: 'income', icon: 'ph-bank' },
         { name: 'Rent Payment', date: 'Nov 24', amount: -25000, type: 'expense', icon: 'ph-house' },
@@ -178,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- TOGGLE AMOUNT VISIBILITY ---
+    // --- TOGGLE AMOUNTS VISIBILITY ---
     const toggleAmountsBtn = document.getElementById('toggleAmounts');
     const toggleIcon = toggleAmountsBtn.querySelector('i');
     let amountsVisible = true;
@@ -256,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function fadeOutMatrix() {
-        // Add fade-out for smooth transition
+        // Add fade-out class for smooth transition
         matrixCanvas.classList.add('fading-out');
 
         // Clean up after fade completes
