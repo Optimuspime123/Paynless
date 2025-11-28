@@ -29,31 +29,37 @@
                 <span>PAYNLESS</span>
             </div>
 
-            <div class="wallet-card">
-                <div class="wallet-header">
-                    <span class="label">TOTAL BALANCE</span>
-                    <button class="icon-btn"><i class="ph ph-eye"></i></button>
-                </div>
-                <div class="balance font-mono">₹124,592.00</div>
-                <div class="wallet-stats">
-                    <div class="stat positive">
-                        <span class="label">EARNINGS</span>
-                        <span class="value font-mono">₹12,402</span>
+            <div class="wallet-card" id="matrixCard">
+                <!-- Matrix Animation Canvas -->
+                <div class="matrix-container" id="matrixCanvas"></div>
+
+                <!-- Wallet Content -->
+                <div class="card-content">
+                    <div class="wallet-header">
+                        <span class="label">TOTAL BALANCE</span>
+                        <button class="icon-btn" id="toggleAmounts" title="Hide amounts"><i
+                                class="ph ph-eye"></i></button>
                     </div>
-                    <div class="stat negative">
-                        <span class="label">SPENDING</span>
-                        <span class="value font-mono">₹4,290</span>
+                    <div class="balance font-mono">₹124,592.00</div>
+                    <div class="wallet-stats">
+                        <div class="stat positive">
+                            <span class="label">EARNINGS</span>
+                            <span class="value font-mono">₹12,402</span>
+                        </div>
+                        <div class="stat negative">
+                            <span class="label">SPENDING</span>
+                            <span class="value font-mono">₹4,290</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <ul class="nav-links">
-                <li class="active"><a href="#"><i class="ph ph-squares-four"></i> Dashboard</a></li>
-                <li><a href="#"><i class="ph ph-chart-line-up"></i> Analytics</a></li>
-                <li><a href="#"><i class="ph ph-arrows-left-right"></i> Transactions</a></li>
-                <li><a href="#"><i class="ph ph-wallet"></i> Cards</a></li>
-                <li><a href="#"><i class="ph ph-gear"></i> Settings</a></li>
-            </ul>
+            <div class="transaction-history">
+                <h3 class="history-title">RECENT ACTIVITY</h3>
+                <div class="transaction-list" id="transactionList">
+                    <!-- Transactions populated by JS -->
+                </div>
+            </div>
 
             <div class="user-mini">
                 <div class="avatar">SA</div>
