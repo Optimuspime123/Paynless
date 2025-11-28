@@ -79,7 +79,25 @@
                 <div class="header-actions">
                     <div class="demo-badge">DEMO ACCOUNT</div>
                     <button class="theme-toggle" id="themeToggle" aria-label="Toggle Theme">
-                        <i class="ph-fill ph-moon"></i>
+                        <svg viewBox="0 0 24 24">
+                            <defs>
+                                <mask id="crescentMask">
+                                    <rect x="0" y="0" width="24" height="24" fill="white" />
+                                    <circle class="toggle-mask" cx="12" cy="12" r="5.5" />
+                                </mask>
+                            </defs>
+                            <circle class="toggle-circle" cx="12" cy="12" r="5.5" mask="url(#crescentMask)" />
+                            <g class="toggle-rays">
+                                <line x1="12" y1="1" x2="12" y2="3.5" />
+                                <line x1="12" y1="20.5" x2="12" y2="23" />
+                                <line x1="1" y1="12" x2="3.5" y2="12" />
+                                <line x1="20.5" y1="12" x2="23" y2="12" />
+                                <line x1="4.2" y1="4.2" x2="6" y2="6" />
+                                <line x1="18" y1="18" x2="19.8" y2="19.8" />
+                                <line x1="4.2" y1="19.8" x2="6" y2="18" />
+                                <line x1="18" y1="6" x2="19.8" y2="4.2" />
+                            </g>
+                        </svg>
                     </button>
                 </div>
             </header>
@@ -210,7 +228,7 @@
                     <span class="time">10:42 PM</span>
                 </div>
             </div>
-            <div class="chat-input-area"> <!-- this is just a dummy input! -->
+            <div class="chat-input-area"> <!-- hahahaha dummy input! -->
                 <input type="text" id="chatInput" placeholder="Ask anything...">
                 <button id="sendBtn"><i class="ph-fill ph-arrow-right"></i></button>
             </div>
