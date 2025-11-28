@@ -415,23 +415,119 @@ body::before {
     border: 1px solid var(--border-color);
 }
 
+/* === THEME TOGGLE === */
 .theme-toggle {
-    background: transparent;
+    width: 44px;
+    height: 44px;
+    background: var(--bg-panel);
     border: var(--border-width) solid var(--border-color);
-    width: 40px;
-    height: 40px;
     border-radius: 50%;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--text-main);
-    transition: transform 0.2s;
+    transition: border-color 0.2s ease, transform 0.2s ease, background 0.3s ease;
+    position: relative;
+}
+
+.theme-toggle::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(var(--primary-rgb), 0.15), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
 }
 
 .theme-toggle:hover {
-    transform: rotate(15deg);
-    background: var(--bg-panel);
+    border-color: var(--primary);
+    transform: scale(1.08);
+}
+
+.theme-toggle:hover::before {
+    opacity: 1;
+}
+
+.theme-toggle:active {
+    transform: scale(0.95);
+}
+
+.theme-toggle svg {
+    width: 22px;
+    height: 22px;
+    overflow: visible;
+}
+
+/* Sun/Moon circle */
+.toggle-circle {
+    fill: none;
+    stroke: var(--primary);
+    stroke-width: 2.5;
+    transform-origin: center;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="dark"] .toggle-circle {
+    transform: rotate(-45deg);
+}
+
+/* Crescent mask */
+.toggle-mask {
+    fill: var(--bg-panel);
+    transform: translateX(10px);
+    transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1), fill 0.3s ease;
+}
+
+[data-theme="dark"] .toggle-mask {
+    transform: translateX(3px);
+}
+
+/* Sun rays */
+.toggle-rays line {
+    stroke: var(--primary);
+    stroke-width: 2;
+    stroke-linecap: round;
+    transform-origin: center;
+    transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toggle-rays line:nth-child(1) {
+    transition-delay: 0ms;
+}
+
+.toggle-rays line:nth-child(2) {
+    transition-delay: 25ms;
+}
+
+.toggle-rays line:nth-child(3) {
+    transition-delay: 50ms;
+}
+
+.toggle-rays line:nth-child(4) {
+    transition-delay: 75ms;
+}
+
+.toggle-rays line:nth-child(5) {
+    transition-delay: 100ms;
+}
+
+.toggle-rays line:nth-child(6) {
+    transition-delay: 125ms;
+}
+
+.toggle-rays line:nth-child(7) {
+    transition-delay: 150ms;
+}
+
+.toggle-rays line:nth-child(8) {
+    transition-delay: 175ms;
+}
+
+[data-theme="dark"] .toggle-rays line {
+    opacity: 0;
+    transform: scale(0);
 }
 
 .content-grid {
