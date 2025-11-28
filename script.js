@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const html = document.documentElement;
     const themeIcon = themeToggle.querySelector('i');
 
-    // Check local storage or default to dark
+    // local storage or default to dark cause its the best
     const savedTheme = localStorage.getItem('theme') || 'dark';
     html.setAttribute('data-theme', savedTheme);
     updateThemeIcon(savedTheme);
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- CHAT INTERFACE ---
+    // --- CHAT INTERFACE WIP!!---
     const chatInput = document.getElementById('chatInput');
     const sendBtn = document.getElementById('sendBtn');
     const chatWindow = document.getElementById('chatWindow');
@@ -139,6 +139,148 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Enter') handleSend();
     });
 
+    // --- FAKE TRANSACTION HISTORY ---
+    const transactionData = [
+        { name: 'Salary Deposit', date: 'Nov 25', amount: 85000, type: 'income', icon: 'ph-bank' },
+        { name: 'Rent Payment', date: 'Nov 24', amount: -25000, type: 'expense', icon: 'ph-house' },
+        { name: 'Freelance Project', date: 'Nov 23', amount: 15000, type: 'income', icon: 'ph-code' },
+        { name: 'Groceries', date: 'Nov 22', amount: -2500, type: 'expense', icon: 'ph-shopping-cart' },
+        { name: 'Investment Return', date: 'Nov 21', amount: 8500, type: 'income', icon: 'ph-chart-line-up' },
+        { name: 'Internet Bill', date: 'Nov 20', amount: -1200, type: 'expense', icon: 'ph-wifi-high' },
+        { name: 'Client Payment', date: 'Nov 19', amount: 12000, type: 'income', icon: 'ph-money' },
+        { name: 'Electricity', date: 'Nov 18', amount: -890, type: 'expense', icon: 'ph-lightning' }
+    ];
+
+    const transactionList = document.getElementById('transactionList');
+
+    function renderTransactions() {
+        transactionList.innerHTML = '';
+        transactionData.forEach(tx => {
+            const item = document.createElement('div');
+            item.className = 'transaction-item';
+
+            const amountPrefix = tx.amount > 0 ? '+' : '';
+            const amountFormatted = `${amountPrefix}₹${Math.abs(tx.amount).toLocaleString('en-IN')}`;
+
+            item.innerHTML = `
+                <div class="transaction-info">
+                    <div class="transaction-icon ${tx.type}">
+                        <i class="ph ${tx.icon}"></i>
+                    </div>
+                    <div class="transaction-details">
+                        <div class="transaction-name">${tx.name}</div>
+                        <div class="transaction-date">${tx.date}</div>
+                    </div>
+                </div>
+                <div class="transaction-amount ${tx.type}">${amountFormatted}</div>
+            `;
+            transactionList.appendChild(item);
+        });
+    }
+
+    // --- TOGGLE AMOUNT VISIBILITY ---
+    const toggleAmountsBtn = document.getElementById('toggleAmounts');
+    const toggleIcon = toggleAmountsBtn.querySelector('i');
+    let amountsVisible = true;
+
+    toggleAmountsBtn.addEventListener('click', () => {
+        amountsVisible = !amountsVisible;
+
+        // Toggle icon and tooltip
+        if (amountsVisible) {
+            toggleIcon.classList.remove('ph-eye-slash');
+            toggleIcon.classList.add('ph-eye');
+            toggleAmountsBtn.title = 'Hide amounts';
+        } else {
+            toggleIcon.classList.remove('ph-eye');
+            toggleIcon.classList.add('ph-eye-slash');
+            toggleAmountsBtn.title = 'Show amounts';
+        }
+
+        // Toggle wallet amounts
+        const balance = document.querySelector('.balance');
+        const walletValues = document.querySelectorAll('.wallet-stats .value');
+        balance.classList.toggle('hidden', !amountsVisible);
+        walletValues.forEach(val => val.classList.toggle('hidden', !amountsVisible));
+
+        // Toggle transaction amounts
+        const transactionAmounts = document.querySelectorAll('.transaction-amount');
+        transactionAmounts.forEach(amt => amt.classList.toggle('hidden', !amountsVisible));
+    });
+
+    // --- MATRIX RAIN ANIMATION ---
+    const matrixCard = document.getElementById('matrixCard');
+    const matrixCanvas = document.getElementById('matrixCanvas');
+    let animationTimeout;
+    let cleanupTimer;
+    let isAnimating = false;
+
+    // Configuration
+    const DURATION = 1100;
+    const FADE_DURATION = 350;
+    const DROP_COUNT = 45;
+    const CHARS = ['₹', '₹', '₹', '₹', '0', '1', '1', '0'];
+
+    function startMatrix() {
+        // Clear any pending fade-out
+        clearTimeout(animationTimeout);
+        clearTimeout(cleanupTimer);
+
+        // If we're fading out, cancel it and continue
+        matrixCanvas.classList.remove('fading-out');
+
+        // Only generate new drops if we're not already animating
+        if (!isAnimating) {
+            matrixCanvas.innerHTML = '';
+
+            for (let i = 0; i < DROP_COUNT; i++) {
+                const drop = document.createElement('div');
+                drop.className = 'matrix-drop';
+                drop.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
+
+                drop.style.left = Math.random() * 100 + '%';
+                drop.style.animationDuration = (1 + Math.random() * 1.5) + 's';
+                drop.style.animationDelay = Math.random() * 1.5 + 's';
+                drop.style.fontSize = (10 + Math.random() * 6) + 'px';
+
+                matrixCanvas.appendChild(drop);
+            }
+
+            isAnimating = true;
+        }
+
+        // Set auto-stop timer
+        animationTimeout = setTimeout(() => {
+            fadeOutMatrix();
+        }, DURATION);
+    }
+
+    function fadeOutMatrix() {
+        // Add fade-out for smooth transition
+        matrixCanvas.classList.add('fading-out');
+
+        // Clean up after fade completes
+        cleanupTimer = setTimeout(() => {
+            matrixCanvas.innerHTML = '';
+            matrixCanvas.classList.remove('fading-out');
+            isAnimating = false;
+        }, FADE_DURATION);
+    }
+
+    function stopMatrix() {
+        clearTimeout(animationTimeout);
+        clearTimeout(cleanupTimer);
+
+        if (isAnimating) {
+            fadeOutMatrix();
+        }
+    }
+
+    // Event Listeners for Matrix Animation
+    matrixCard.addEventListener('mouseenter', startMatrix);
+    matrixCard.addEventListener('mouseleave', stopMatrix);
+
     // Initial Render
     renderPortfolio('crypto');
+    renderTransactions();
 });
