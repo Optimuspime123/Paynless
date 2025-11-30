@@ -79,6 +79,10 @@
                 </div>
                 <div class="header-actions">
                     <div class="demo-badge">DEMO ACCOUNT</div>
+                    <button type="button" class="ai-toggle-btn" id="aiToggle" aria-label="Open AI Assistant" aria-expanded="false" aria-controls="aiPanel">
+                        <i class="ph ph-chats-circle"></i>
+                        <span>Paynless AI</span>
+                    </button>
                     <button class="theme-toggle" id="themeToggle" aria-label="Toggle Theme">
                         <svg viewBox="0 0 24 24">
                             <defs>
@@ -218,10 +222,15 @@
         </main>
 
         <!-- RIGHT SIDEBAR: AI CHAT WIP!!!-->
-        <aside class="sidebar-right">
+        <aside class="sidebar-right" id="aiPanel" aria-hidden="true" role="complementary" aria-label="Finance AI Assistant">
             <div class="chat-header">
-                <div class="status-dot"></div>
-                <span>FINANCE AI</span>
+                <div class="chat-title">
+                    <div class="status-dot"></div>
+                    <span>FINANCE AI</span>
+                </div>
+                <button type="button" class="ai-close-btn" id="aiClose" aria-label="Close AI Assistant">
+                    <i class="ph ph-x"></i>
+                </button>
             </div>
             <div class="chat-window" id="chatWindow">
                 <div class="message ai">

@@ -60,6 +60,10 @@ body {
     position: relative;
 }
 
+body.ai-panel-active {
+    overflow: hidden;
+}
+
 /* Noise Texture */
 body::before {
     content: "";
@@ -74,6 +78,10 @@ body::before {
     opacity: 0.4;
 }
 
+body.ai-panel-active::before {
+    opacity: 0.2;
+}
+
 /* Typography Utilities */
 .font-display {
     font-family: var(--font-display);
@@ -86,8 +94,13 @@ body::before {
 /* --- LAYOUT --- */
 .app-container {
     display: grid;
-    grid-template-columns: var(--sidebar-width) 1fr var(--chat-width);
+    grid-template-columns: var(--sidebar-width) minmax(0, 1fr) var(--chat-width);
     height: 100vh;
+    transition: grid-template-columns 0.3s ease;
+}
+
+.app-container.ai-collapsed {
+    grid-template-columns: var(--sidebar-width) minmax(0, 1fr) 0;
 }
 
 /* --- LEFT SIDEBAR --- */
@@ -374,6 +387,7 @@ body::before {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    min-width: 0;
 }
 
 .top-bar {
@@ -708,6 +722,17 @@ body::before {
     border-left: var(--border-width) solid var(--border-color);
     display: flex;
     flex-direction: column;
+    transition: transform 0.35s ease, opacity 0.35s ease;
+    transform: translateX(0);
+    opacity: 1;
+    visibility: visible;
+}
+
+.app-container.ai-collapsed .sidebar-right {
+    transform: translateX(30px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
 }
 
 .chat-header {
@@ -715,6 +740,13 @@ body::before {
     border-bottom: var(--border-width) solid var(--border-color);
     font-family: var(--font-mono);
     font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.chat-title {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -834,4 +866,249 @@ body::before {
 
 .icon-btn:hover {
     background: rgba(255, 255, 255, 0.1);
+}
+
+/* --- AI TOGGLE BUTTON --- */
+.ai-toggle-btn {
+    background: var(--bg-panel);
+    border: var(--border-width) solid var(--border-color);
+    color: var(--text-main);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.ai-toggle-btn:hover {
+    border-color: var(--primary);
+    background: var(--bg-sidebar);
+    transform: translateY(-1px);
+}
+
+.ai-toggle-btn i {
+    font-size: 1.1rem;
+}
+
+.ai-toggle-btn.is-active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #000;
+}
+
+.ai-toggle-btn.is-active i {
+    color: #000;
+}
+
+.ai-toggle-btn:focus-visible,
+.ai-close-btn:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* --- AI CLOSE BUTTON --- */
+.ai-close-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-left: auto;
+}
+
+.ai-close-btn:hover {
+    background: var(--bg-panel);
+    color: var(--text-main);
+}
+
+.ai-close-btn i {
+    font-size: 1.25rem;
+}
+
+/* --- RESPONSIVE BEHAVIOR --- */
+@media (max-width: 1024px) {
+    body {
+        overflow: auto;
+    }
+
+    body.ai-panel-active {
+        overflow: hidden;
+    }
+
+    body.ai-panel-active::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        z-index: 90;
+        pointer-events: auto;
+    }
+
+    .app-container {
+        grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .sidebar-right {
+        position: fixed;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: var(--chat-width);
+        z-index: 100;
+        box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .app-container.ai-collapsed .sidebar-right {
+        transform: translateX(100%);
+    }
+
+    .ai-toggle-btn span {
+        display: inline;
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --sidebar-width: 100%;
+    }
+
+    body {
+        overflow: auto;
+    }
+
+    .app-container {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .sidebar-left {
+        width: 100%;
+        border-right: none;
+        border-bottom: var(--border-width) solid var(--border-color);
+        overflow-y: visible;
+        max-height: none;
+    }
+
+    .transaction-history {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .main-content {
+        flex: 1;
+        order: 2;
+    }
+
+    .sidebar-right {
+        position: fixed;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+        max-width: 100%;
+        z-index: 200;
+        box-shadow: none;
+    }
+
+    .app-container.ai-collapsed .sidebar-right {
+        transform: translateX(100%);
+    }
+
+    .ai-toggle-btn span {
+        display: none;
+    }
+
+    .ai-toggle-btn {
+        padding: 0.5rem;
+    }
+
+    .deals-scroll {
+        gap: 1rem;
+    }
+
+    .deal-card {
+        min-width: 200px;
+    }
+
+    .asset-row {
+        grid-template-columns: 2fr 1fr;
+    }
+
+    .asset-graph {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar-left {
+        padding: 1rem;
+    }
+
+    .content-grid {
+        padding: 1rem;
+    }
+
+    .top-bar {
+        padding: 1rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .breadcrumbs {
+        font-size: 0.7rem;
+    }
+
+    .demo-badge {
+        font-size: 0.65rem;
+        padding: 0.2rem 0.5rem;
+    }
+
+    .header-actions {
+        gap: 0.5rem;
+    }
+
+    .ai-toggle-btn {
+        padding: 0.4rem;
+    }
+
+    .ai-toggle-btn i {
+        font-size: 1rem;
+    }
+
+    .theme-toggle {
+        width: 38px;
+        height: 38px;
+    }
+
+    .balance {
+        font-size: 1.5rem;
+    }
+
+    .wallet-stats {
+        font-size: 0.8rem;
+    }
+
+    .deal-card {
+        min-width: 180px;
+        padding: 1rem;
+    }
+
+    .asset-row {
+        padding: 0.75rem;
+    }
 }

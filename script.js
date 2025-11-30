@@ -15,6 +15,78 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('theme', newTheme);
     });
 
+    // --- AI SIDEBAR TOGGLE ---
+    const appContainer = document.querySelector('.app-container');
+    const aiToggle = document.getElementById('aiToggle');
+    const aiClose = document.getElementById('aiClose');
+    const sidebarRight = document.querySelector('.sidebar-right');
+    const body = document.body;
+    const aiToggleLabel = aiToggle ? aiToggle.querySelector('span') : null;
+    const mobileQuery = window.matchMedia('(max-width: 1024px)');
+
+    const setAISidebarState = (isOpen) => {
+        if (!appContainer || !sidebarRight || !aiToggle) return;
+
+        appContainer.classList.toggle('ai-collapsed', !isOpen);
+        sidebarRight.setAttribute('aria-hidden', String(!isOpen));
+        aiToggle.setAttribute('aria-expanded', String(isOpen));
+        aiToggle.classList.toggle('is-active', isOpen);
+        aiToggle.setAttribute('aria-label', isOpen ? 'Close AI Assistant' : 'Open AI Assistant');
+
+        if (aiToggleLabel) {
+            aiToggleLabel.textContent = isOpen ? 'Hide AI' : 'Paynless AI';
+        }
+
+        const isMobile = mobileQuery.matches;
+        body.classList.toggle('ai-panel-active', isOpen && isMobile);
+    };
+
+    setAISidebarState(false);
+
+    if (aiToggle) {
+        aiToggle.addEventListener('click', () => {
+            const isCurrentlyOpen = !appContainer.classList.contains('ai-collapsed');
+            setAISidebarState(!isCurrentlyOpen);
+        });
+    }
+
+    if (aiClose) {
+        aiClose.addEventListener('click', () => {
+            setAISidebarState(false);
+        });
+    }
+
+    const handleViewportChange = () => {
+        if (mobileQuery.matches) {
+            setAISidebarState(false);
+        } else {
+            body.classList.remove('ai-panel-active');
+        }
+    };
+
+    if (typeof mobileQuery.addEventListener === 'function') {
+        mobileQuery.addEventListener('change', handleViewportChange);
+    } else if (typeof mobileQuery.addListener === 'function') {
+        mobileQuery.addListener(handleViewportChange);
+    }
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            setAISidebarState(false);
+        }
+    });
+
+    document.addEventListener('click', (event) => {
+        if (body.classList.contains('ai-panel-active')) {
+            const clickInsidePanel = sidebarRight.contains(event.target);
+            const clickOnToggle = aiToggle && aiToggle.contains(event.target);
+
+            if (!clickInsidePanel && !clickOnToggle) {
+                setAISidebarState(false);
+            }
+        }
+    });
+
     // --- PORTFOLIO SWITCHER ---
     const toggleBtns = document.querySelectorAll('.toggle-btn');
     const portfolioList = document.getElementById('portfolioList');
