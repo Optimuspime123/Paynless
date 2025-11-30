@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -81,14 +82,10 @@
       height: 100vh;
       width: 100vw;
       position: fixed;
-      background: linear-gradient(
-            90deg,
-            var(--line) 1px,
-            transparent 1px var(--size)
-          )
-          calc(var(--size) * 0.36) 50% / var(--size) var(--size),
-        linear-gradient(var(--line) 1px, transparent 1px var(--size)) 0%
-          calc(var(--size) * 0.32) / var(--size) var(--size);
+      background: linear-gradient(90deg,
+          var(--line) 1px,
+          transparent 1px var(--size)) calc(var(--size) * 0.36) 50% / var(--size) var(--size),
+        linear-gradient(var(--line) 1px, transparent 1px var(--size)) 0% calc(var(--size) * 0.32) / var(--size) var(--size);
       mask: linear-gradient(-20deg, transparent 50%, white);
       top: 0;
       transform-style: flat;
@@ -130,14 +127,11 @@
       transition-property: translate, scale;
       transition-duration: 0.12s;
       transition-timing-function: cubic-bezier(.645, .045, .355, 1);
-      box-shadow: 
-        calc(var(--pointer-x, 0) * 5px) 
-        calc(var(--pointer-y, 0) * 5px) 
-        30px 
-        rgba(255, 255, 255, 0.1);
+      box-shadow:
+        calc(var(--pointer-x, 0) * 5px) calc(var(--pointer-y, 0) * 5px) 30px rgba(255, 255, 255, 0.1);
     }
 
-    article > div {
+    article>div {
       clip-path: inset(0 round 12px);
       overflow: hidden;
       align-content: center;
@@ -257,6 +251,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="attribution">sexy demo made by optimus</div>
   <button class="theme-toggle" id="themeToggle">Toggle Theme</button>
@@ -264,7 +259,11 @@
     <article>
       <div>
         <button aria-label="More options">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>dots-horizontal</title><path d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z" /></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <title>dots-horizontal</title>
+            <path
+              d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z" />
+          </svg>
         </button>
         <div class="img-container">
           <img src="https://assets.codepen.io/605876/beeper.png" alt="" />
@@ -276,31 +275,43 @@
     <article>
       <div>
         <button aria-label="More options">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>dots-horizontal</title><path d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z" /></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <title>dots-horizontal</title>
+            <path
+              d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z" />
+          </svg>
         </button>
         <div class="img-container">
           <img src="https://assets.codepen.io/605876/discord.png" alt="" />
         </div>
         <img src="https://assets.codepen.io/605876/discord.png" alt="" />
-        <h2>Discord</h2>
+        <h2>Discord Nitro</h2>
       </div>
     </article>
     <article>
       <div>
         <button aria-label="More options">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>dots-horizontal</title><path d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z" /></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <title>dots-horizontal</title>
+            <path
+              d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z" />
+          </svg>
         </button>
         <div class="img-container">
           <img src="https://assets.codepen.io/605876/spotify.png" alt="" />
         </div>
         <img src="https://assets.codepen.io/605876/spotify.png" alt="" />
-        <h2>Spotify</h2>
+        <h2>Spotify Premium</h2>
       </div>
     </article>
     <article>
       <div>
         <button aria-label="More options">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>dots-horizontal</title><path d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z" /></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <title>dots-horizontal</title>
+            <path
+              d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z" />
+          </svg>
         </button>
         <div class="img-container">
           <img src="https://assets.codepen.io/605876/photos.png" alt="" />
@@ -312,43 +323,67 @@
     <article>
       <div>
         <button aria-label="More options">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>dots-horizontal</title><path d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z" /></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <title>dots-horizontal</title>
+            <path
+              d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z" />
+          </svg>
         </button>
         <div class="img-container">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/2048px-Telegram_2019_Logo.svg.png" alt="" />
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/2048px-Telegram_2019_Logo.svg.png"
+            alt="" />
         </div>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/2048px-Telegram_2019_Logo.svg.png" alt="" />
-        <h2>Telegram</h2>
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/2048px-Telegram_2019_Logo.svg.png"
+          alt="" />
+        <h2>Telegram Premium</h2>
       </div>
     </article>
     <article>
       <div>
         <button aria-label="More options">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>dots-horizontal</title><path d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z" /></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <title>dots-horizontal</title>
+            <path
+              d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z" />
+          </svg>
         </button>
         <div class="img-container">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Apple_Music_icon.svg/1200px-Apple_Music_icon.svg.png" alt="" />
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Apple_Music_icon.svg/1200px-Apple_Music_icon.svg.png"
+            alt="" />
         </div>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Apple_Music_icon.svg/1200px-Apple_Music_icon.svg.png" alt="" />
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Apple_Music_icon.svg/1200px-Apple_Music_icon.svg.png"
+          alt="" />
         <h2>Apple Music</h2>
       </div>
     </article>
     <article>
       <div>
         <button aria-label="More options">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>dots-horizontal</title><path d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z" /></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <title>dots-horizontal</title>
+            <path
+              d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z" />
+          </svg>
         </button>
         <div class="img-container">
           <img src="https://techshark.io/media/tool_logo/Claude_AI_Logo.png" alt="" />
         </div>
         <img src="https://techshark.io/media/tool_logo/Claude_AI_Logo.png" alt="" />
-        <h2>Claude</h2>
+        <h2>Claude Pro</h2>
       </div>
     </article>
     <article>
       <div>
         <button aria-label="More options">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>dots-horizontal</title><path d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z" /></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <title>dots-horizontal</title>
+            <path
+              d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z" />
+          </svg>
         </button>
         <div class="img-container">
           <img src="https://logo.wine/a/logo/Disney%2B/Disney%2B-White-Dark-Background-Logo.wine.svg" alt="" />
@@ -359,10 +394,7 @@
     </article>
   </main>
 
-  <svg
-    class="sr-only"
-    style="overflow: visible !important;"
-    xmlns="http://www.w3.org/2000/svg"
+  <svg class="sr-only" style="overflow: visible !important;" xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink">
     <filter id="blur" width="500%" height="500%">
       <feGaussianBlur in="SourceGraphic" stdDeviation="20" />
@@ -424,19 +456,19 @@
       articles.forEach((article) => {
         // Get the bounding rectangle of the article
         const rect = article.getBoundingClientRect()
-        
+
         // Calculate center point of the article
         const centerX = rect.left + rect.width / 2
         const centerY = rect.top + rect.height / 2
-        
+
         // Calculate pointer position relative to center
         const relativeX = event.clientX - centerX
         const relativeY = event.clientY - centerY
-        
+
         // Normalize to -1 to 1 range (at card edges)
         const x = relativeX / (rect.width / 2)
         const y = relativeY / (rect.height / 2)
-        
+
         // Update CSS custom properties for each article
         article.style.setProperty('--pointer-x', x.toFixed(3))
         article.style.setProperty('--pointer-y', y.toFixed(3))
@@ -444,4 +476,5 @@
     })
   </script>
 </body>
+
 </html>
