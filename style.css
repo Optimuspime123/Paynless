@@ -998,12 +998,11 @@ body.ai-panel-active::before {
     gap: 0.5rem;
 }
 
-.status-dot {
-    width: 8px;
-    height: 8px;
-    background: var(--positive);
-    border-radius: 50%;
-    box-shadow: 0 0 8px var(--positive);
+.status-bot {
+    width: 50px;
+    height: 50px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 6px rgba(29, 185, 84, 0.6));
 }
 
 .chat-window {
