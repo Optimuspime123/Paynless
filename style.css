@@ -261,6 +261,15 @@ body.ai-panel-active::before {
 .transaction-history {
     flex: 1;
     overflow-y: auto;
+    max-height: calc(100vh - 420px);
+    padding-right: 0.5rem;
+}
+
+@media (max-width: 1024px) {
+    .transaction-history {
+        max-height: none;
+        padding-right: 0;
+    }
 }
 
 .history-title {

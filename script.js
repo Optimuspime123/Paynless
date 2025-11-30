@@ -41,7 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
         body.classList.toggle('ai-panel-active', isOpen && isMobile);
     };
 
-    setAISidebarState(false);
+    const isMobile = mobileQuery.matches;
+    setAISidebarState(!isMobile);
 
     if (aiToggle) {
         aiToggle.addEventListener('click', () => {
@@ -57,10 +58,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const handleViewportChange = () => {
-        if (mobileQuery.matches) {
-            setAISidebarState(false);
+        const isMobileViewport = mobileQuery.matches;
+        const isCollapsed = appContainer.classList.contains('ai-collapsed');
+
+        if (isMobileViewport) {
+            if (!isCollapsed) {
+                body.classList.add('ai-panel-active');
+            } else {
+                body.classList.remove('ai-panel-active');
+            }
         } else {
             body.classList.remove('ai-panel-active');
+
+            if (isCollapsed) {
+                setAISidebarState(true);
+            }
         }
     };
 
