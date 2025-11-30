@@ -356,32 +356,44 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             name: 'Discord Nitro',
             status: 'active',
-            logo: 'https://assets.codepen.io/605876/discord.png'
+            price: '₹649',
+            logo: 'https://assets.codepen.io/605876/discord.png',
+            manageUrl: 'https://discord.com/settings/subscriptions'
         },
         {
             name: 'Claude Pro',
             status: 'active',
-            logo: 'https://techshark.io/media/tool_logo/Claude_AI_Logo.png'
+            price: '₹1,650',
+            logo: 'https://techshark.io/media/tool_logo/Claude_AI_Logo.png',
+            manageUrl: 'https://claude.ai/settings/billing'
         },
         {
             name: 'Telegram Premium',
             status: 'active',
-            logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/2048px-Telegram_2019_Logo.svg.png'
+            price: '₹469',
+            logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/2048px-Telegram_2019_Logo.svg.png',
+            manageUrl: 'https://telegram.org/'
         },
         {
             name: 'Netflix Basic',
             status: 'active',
-            logo: 'https://static.vecteezy.com/system/resources/previews/017/396/814/non_2x/netflix-mobile-application-logo-free-png.png'
+            price: '₹199',
+            logo: 'https://static.vecteezy.com/system/resources/previews/017/396/814/non_2x/netflix-mobile-application-logo-free-png.png',
+            manageUrl: 'https://www.netflix.com/youraccount'
         },
         {
             name: 'Spotify Premium',
             status: 'trial',
-            logo: 'https://assets.codepen.io/605876/spotify.png'
+            price: '₹119',
+            logo: 'https://assets.codepen.io/605876/spotify.png',
+            manageUrl: 'https://www.spotify.com/account/subscription/'
         },
         {
             name: 'Disney+',
             status: 'expired',
-            logo: 'https://logo.wine/a/logo/Disney%2B/Disney%2B-White-Dark-Background-Logo.wine.svg'
+            price: '₹299',
+            logo: 'https://logo.wine/a/logo/Disney%2B/Disney%2B-White-Dark-Background-Logo.wine.svg',
+            manageUrl: 'https://www.hotstar.com/settings'
         }
     ];
 
@@ -390,30 +402,71 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderSubscriptions() {
         subscriptionsGrid.innerHTML = '';
 
-        subscriptionsData.forEach(sub => {
+        subscriptionsData.forEach((sub, index) => {
             const card = document.createElement('article');
             card.className = 'subscription-card';
+            card.dataset.index = index;
 
             const statusClass = sub.status;
             const statusLabel = sub.status.charAt(0).toUpperCase() + sub.status.slice(1);
 
             card.innerHTML = `
                 <div>
-                    <button class="menu-btn" aria-label="Manage subscription">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z" />
-                        </svg>
-                    </button>
+                    <div class="menu-wrapper">
+                        <button class="menu-btn" aria-label="Manage subscription" data-index="${index}">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z" />
+                            </svg>
+                        </button>
+                        <div class="subscription-menu" data-index="${index}">
+                            <button class="menu-item" data-url="${sub.manageUrl}">
+                                <i class="ph ph-gear"></i>
+                                Manage Plan
+                            </button>
+                        </div>
+                    </div>
                     <div class="img-container">
                         <img src="${sub.logo}" alt="" />
                     </div>
                     <img src="${sub.logo}" alt="${sub.name} logo" />
                     <h3>${sub.name}</h3>
+                    <div class="subscription-price font-mono">${sub.price}/mo</div>
                     <span class="subscription-status ${statusClass}">${statusLabel}</span>
                 </div>
             `;
 
             subscriptionsGrid.appendChild(card);
+        });
+
+        const menuBtns = document.querySelectorAll('.menu-btn');
+        const menus = document.querySelectorAll('.subscription-menu');
+
+        menuBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const index = btn.dataset.index;
+                const menu = document.querySelector(`.subscription-menu[data-index="${index}"]`);
+                
+                menus.forEach(m => {
+                    if (m !== menu) m.classList.remove('active');
+                });
+                
+                menu.classList.toggle('active');
+            });
+        });
+
+        const menuItems = document.querySelectorAll('.menu-item');
+        menuItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const url = item.dataset.url;
+                window.open(url, '_blank');
+                menus.forEach(m => m.classList.remove('active'));
+            });
+        });
+
+        document.addEventListener('click', () => {
+            menus.forEach(m => m.classList.remove('active'));
         });
     }
 
