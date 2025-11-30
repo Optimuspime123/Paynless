@@ -725,6 +725,189 @@ body.ai-panel-active::before {
     color: var(--negative);
 }
 
+/* SUBSCRIPTIONS SECTION */
+.subscriptions-section h2 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.subscriptions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+    touch-action: none;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+.subscription-card {
+    -webkit-tap-highlight-color: transparent;
+    aspect-ratio: 4 / 3;
+    outline: 2px solid var(--border-color);
+    background: var(--bg-panel);
+    position: relative;
+    border-radius: 12px;
+    cursor: pointer;
+    transition-property: translate, scale;
+    transition-duration: 0.12s;
+    transition-timing-function: cubic-bezier(.645, .045, .355, 1);
+    box-shadow: calc(var(--pointer-x, 0) * 5px) calc(var(--pointer-y, 0) * 5px) 30px rgba(var(--primary-rgb), 0.1);
+    overflow: hidden;
+}
+
+.subscription-card>div {
+    clip-path: inset(0 round 12px);
+    overflow: hidden;
+    align-content: center;
+    display: grid;
+    place-items: center;
+    gap: 0.5rem;
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+}
+
+.subscription-card:active {
+    translate: 0 1px;
+    scale: 0.99;
+}
+
+.subscription-card::after {
+    content: '';
+    position: absolute;
+    pointer-events: none;
+    inset: 0px;
+    border-radius: inherit;
+    border: 3px solid transparent;
+    backdrop-filter: blur(0px) saturate(4.2) brightness(2.5) contrast(2.5);
+    -webkit-mask: linear-gradient(#fff 0 100%) border-box, linear-gradient(#fff 0 100%) padding-box;
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 100%) border-box, linear-gradient(#fff 0 100%) padding-box;
+    mask-composite: exclude;
+    z-index: 2;
+    clip-path: inset(0 round 12px);
+    transform: translateZ(0);
+}
+
+.subscription-card .menu-btn {
+    -webkit-tap-highlight-color: transparent;
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    border-radius: 8px;
+    border: 0;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    width: 32px;
+    aspect-ratio: 1;
+    background: transparent;
+    cursor: pointer;
+    opacity: 0.3;
+}
+
+.subscription-card .menu-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--bg-panel);
+    opacity: 0.8;
+    backdrop-filter: blur(4px);
+    z-index: -1;
+    border-radius: inherit;
+    opacity: 0;
+}
+
+.subscription-card .menu-btn:is(:hover, :focus-visible) {
+    opacity: 1;
+}
+
+.subscription-card .menu-btn:is(:hover, :focus-visible)::before {
+    opacity: 1;
+}
+
+.subscription-card .menu-btn svg {
+    width: 20px;
+}
+
+.subscription-card .menu-btn svg path {
+    fill: currentColor;
+}
+
+.subscription-card .img-container {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    transform: translateZ(0);
+    filter: url(#subscription-blur) saturate(5) brightness(1.3);
+    translate: calc(var(--pointer-x, -10) * 50%) calc(var(--pointer-y, -10) * 50%);
+    scale: 3.4;
+    opacity: 0.25;
+    will-change: transform, filter;
+}
+
+.subscription-card img {
+    width: 80px;
+    user-select: none;
+    pointer-events: none;
+}
+
+.subscription-card img:nth-of-type(1) {
+    z-index: 2;
+    position: relative;
+}
+
+.subscription-card h3 {
+    z-index: 4;
+    position: relative;
+    font-size: 0.9rem;
+    margin: 0;
+    user-select: none;
+    font-family: var(--font-body);
+    font-weight: 600;
+}
+
+.subscription-status {
+    position: absolute;
+    bottom: 0.75rem;
+    right: 0.75rem;
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    z-index: 3;
+    letter-spacing: 0.05em;
+    border: 1px solid var(--border-color);
+}
+
+.subscription-status.active {
+    background: var(--positive);
+    color: #000;
+}
+
+.subscription-status.trial {
+    background: var(--accent);
+    color: #000;
+}
+
+.subscription-status.expired {
+    background: var(--text-muted);
+    color: var(--bg-panel);
+}
+
 /* --- RIGHT SIDEBAR --- */
 .sidebar-right {
     background: var(--bg-sidebar);
@@ -1061,6 +1244,11 @@ body.ai-panel-active::before {
     .asset-graph {
         display: none;
     }
+
+    .subscriptions-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 1rem;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1119,5 +1307,17 @@ body.ai-panel-active::before {
 
     .asset-row {
         padding: 0.75rem;
+    }
+
+    .subscriptions-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+
+    .subscription-card h3 {
+        font-size: 0.8rem;
+    }
+
+    .subscription-card img {
+        width: 60px;
     }
 }

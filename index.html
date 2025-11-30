@@ -220,6 +220,17 @@
                         </div>
                     </div>
                 </section>
+
+                <!-- SUBSCRIPTIONS SECTION -->
+                <section class="subscriptions-section">
+                    <div class="section-header">
+                        <h2>SUBSCRIPTIONS</h2>
+                        <button class="link-btn">MANAGE ALL <i class="ph ph-arrow-right"></i></button>
+                    </div>
+                    <div class="subscriptions-grid" id="subscriptionsGrid">
+                        <!-- Populated by JS -->
+                    </div>
+                </section>
             </div>
         </main>
 
@@ -247,6 +258,13 @@
             </div>
         </aside>
     </div>
+
+    <svg class="sr-only" style="overflow: visible !important;" xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink">
+        <filter id="subscription-blur" width="500%" height="500%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="28" />
+        </filter>
+    </svg>
 
     <script src="script.js"></script>
 </body>

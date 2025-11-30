@@ -351,7 +351,92 @@ document.addEventListener('DOMContentLoaded', () => {
     matrixCard.addEventListener('mouseenter', startMatrix);
     matrixCard.addEventListener('mouseleave', stopMatrix);
 
+    // --- SUBSCRIPTIONS SECTION ---
+    const subscriptionsData = [
+        {
+            name: 'Discord Nitro',
+            status: 'active',
+            logo: 'https://assets.codepen.io/605876/discord.png'
+        },
+        {
+            name: 'Claude Pro',
+            status: 'active',
+            logo: 'https://techshark.io/media/tool_logo/Claude_AI_Logo.png'
+        },
+        {
+            name: 'Telegram Premium',
+            status: 'active',
+            logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/2048px-Telegram_2019_Logo.svg.png'
+        },
+        {
+            name: 'Netflix Basic',
+            status: 'active',
+            logo: 'https://static.vecteezy.com/system/resources/previews/017/396/814/non_2x/netflix-mobile-application-logo-free-png.png'
+        },
+        {
+            name: 'Spotify Premium',
+            status: 'trial',
+            logo: 'https://assets.codepen.io/605876/spotify.png'
+        },
+        {
+            name: 'Disney+',
+            status: 'expired',
+            logo: 'https://logo.wine/a/logo/Disney%2B/Disney%2B-White-Dark-Background-Logo.wine.svg'
+        }
+    ];
+
+    const subscriptionsGrid = document.getElementById('subscriptionsGrid');
+
+    function renderSubscriptions() {
+        subscriptionsGrid.innerHTML = '';
+
+        subscriptionsData.forEach(sub => {
+            const card = document.createElement('article');
+            card.className = 'subscription-card';
+
+            const statusClass = sub.status;
+            const statusLabel = sub.status.charAt(0).toUpperCase() + sub.status.slice(1);
+
+            card.innerHTML = `
+                <div>
+                    <button class="menu-btn" aria-label="Manage subscription">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z" />
+                        </svg>
+                    </button>
+                    <div class="img-container">
+                        <img src="${sub.logo}" alt="" />
+                    </div>
+                    <img src="${sub.logo}" alt="${sub.name} logo" />
+                    <h3>${sub.name}</h3>
+                    <span class="subscription-status ${statusClass}">${statusLabel}</span>
+                </div>
+            `;
+
+            subscriptionsGrid.appendChild(card);
+        });
+    }
+
+    document.addEventListener('pointermove', (event) => {
+        const subCards = document.querySelectorAll('.subscription-card');
+        subCards.forEach((card) => {
+            const rect = card.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            const relativeX = event.clientX - centerX;
+            const relativeY = event.clientY - centerY;
+
+            const x = relativeX / (rect.width / 2);
+            const y = relativeY / (rect.height / 2);
+
+            card.style.setProperty('--pointer-x', x.toFixed(3));
+            card.style.setProperty('--pointer-y', y.toFixed(3));
+        });
+    });
+
     // Initial Render
     renderPortfolio('crypto');
     renderTransactions();
+    renderSubscriptions();
 });
