@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paynless | Money, Simplified.</title>
+    <link rel="icon" href="logo.png" type="image/png">
+
+    <!-- Fonts -->
+    <link
+        href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=satoshi@400,500,700&f[]=general-sans@400,500,600&display=swap"
+        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- LEFT SIDEBAR: WALLET & NAV -->
+        <nav class="sidebar-left">
+            <div class="brand">
+                <img src="logo.png" alt="Paynless Logo"
+                    style="height: 1.5rem; width: auto; flex-shrink: 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <span>PAYNLESS</span>
+            </div>
+
+            <div class="wallet-card" id="matrixCard">
+                <!-- Matrix Animation Canvas -->
+                <div class="matrix-container" id="matrixCanvas"></div>
+
+                <!-- Wallet Content -->
+                <div class="card-content">
+                    <div class="wallet-header">
+                        <span class="label">TOTAL BALANCE</span>
+                        <button class="icon-btn" id="toggleAmounts" title="Hide amounts"><i
+                                class="ph ph-eye"></i></button>
+                    </div>
+                    <div class="balance font-mono">₹124,592.00</div>
+                    <div class="wallet-stats">
+                        <div class="stat positive">
+                            <span class="label">EARNINGS</span>
+                            <span class="value font-mono">₹12,402</span>
+                        </div>
+                        <div class="stat negative">
+                            <span class="label">SPENDING</span>
+                            <span class="value font-mono">₹4,290</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="transaction-history">
+                <h3 class="history-title">RECENT ACTIVITY</h3>
+                <div class="transaction-list" id="transactionList">
+                    <!-- Transactions populated by JS -->
+                </div>
+            </div>
+
+            <div class="user-mini">
+                <div class="avatar">SA</div>
+                <div class="user-info">
+                    <span class="name">Saswatayu</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="breadcrumbs">
+                    <a href="index.html" class="breadcrumb-link">HOME</a> / <span class="current">DASHBOARD</span>
+                </div>
+                <div class="header-actions">
+                    <div class="demo-badge">DEMO</div>
+                    <button type="button" class="ai-toggle-btn" id="aiToggle" aria-label="Open AI Assistant"
+                        aria-expanded="false" aria-controls="aiPanel">
+                        <i class="ph ph-chats-circle"></i>
+                        <span>Paynless AI</span>
+                    </button>
+                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle Theme">
+                        <svg viewBox="0 0 24 24">
+                            <defs>
+                                <mask id="crescentMask">
+                                    <rect x="0" y="0" width="24" height="24" fill="white" />
+                                    <circle class="toggle-mask" cx="12" cy="12" r="5.5" />
+                                </mask>
+                            </defs>
+                            <circle class="toggle-circle" cx="12" cy="12" r="5.5" mask="url(#crescentMask)" />
+                            <g class="toggle-rays">
+                                <line x1="12" y1="1" x2="12" y2="3.5" />
+                                <line x1="12" y1="20.5" x2="12" y2="23" />
+                                <line x1="1" y1="12" x2="3.5" y2="12" />
+                                <line x1="20.5" y1="12" x2="23" y2="12" />
+                                <line x1="4.2" y1="4.2" x2="6" y2="6" />
+                                <line x1="18" y1="18" x2="19.8" y2="19.8" />
+                                <line x1="4.2" y1="19.8" x2="6" y2="18" />
+                                <line x1="18" y1="6" x2="19.8" y2="4.2" />
+                            </g>
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <div class="content-grid">
+                <!-- SUBSCRIPTIONS SECTION -->
+                <section class="subscriptions-section">
+                    <div class="section-header">
+                        <h2>SUBSCRIPTIONS</h2>
+                        <button class="link-btn">MANAGE ALL <i class="ph ph-arrow-right"></i></button>
+                    </div>
+                    <div class="subscriptions-grid" id="subscriptionsGrid">
+                        <!-- Populated by JS -->
+                    </div>
+                </section>
+
+                <!-- PORTFOLIO SECTION -->
+                <section class="portfolio-section">
+                    <div class="section-header">
+                        <h2>PORTFOLIO</h2>
+                        <div class="toggle-switch">
+                            <button class="toggle-btn active" data-type="crypto">CRYPTO</button>
+                            <button class="toggle-btn" data-type="fiat">STOCKS</button>
+                        </div>
+                    </div>
+
+                    <div class="portfolio-list" id="portfolioList">
+                        <!-- Populated by JS -->
+                        <div class="asset-row">
+                            <div class="asset-info">
+                                <div class="asset-icon btc"><i class="ph-fill ph-currency-btc"></i></div>
+                                <div>
+                                    <div class="asset-name">Bitcoin</div>
+                                    <div class="asset-sub">BTC</div>
+                                </div>
+                            </div>
+                            <div class="asset-graph">
+                                <svg width="100" height="30" viewBox="0 0 100 30">
+                                    <path d="M0,15 Q25,5 50,20 T100,10" fill="none" stroke="#ccff00" stroke-width="2" />
+                                </svg>
+                            </div>
+                            <div class="asset-values">
+                                <div class="asset-price font-mono">$94,230.50</div>
+                                <div class="asset-change positive font-mono">+2.4%</div>
+                            </div>
+                        </div>
+                        <div class="asset-row">
+                            <div class="asset-info">
+                                <div class="asset-icon eth"><i class="ph-fill ph-currency-eth"></i></div>
+                                <div>
+                                    <div class="asset-name">Ethereum</div>
+                                    <div class="asset-sub">ETH</div>
+                                </div>
+                            </div>
+                            <div class="asset-graph">
+                                <svg width="100" height="30" viewBox="0 0 100 30">
+                                    <path d="M0,25 Q25,25 50,10 T100,5" fill="none" stroke="#ccff00" stroke-width="2" />
+                                </svg>
+                            </div>
+                            <div class="asset-values">
+                                <div class="asset-price font-mono">$4,120.10</div>
+                                <div class="asset-change positive font-mono">+1.8%</div>
+                            </div>
+                        </div>
+                        <div class="asset-row">
+                            <div class="asset-info">
+                                <div class="asset-icon sol"><i class="ph-fill ph-currency-solana"></i></div>
+                                <!-- Fallback icon if needed -->
+                                <div>
+                                    <div class="asset-name">Solana</div>
+                                    <div class="asset-sub">SOL</div>
+                                </div>
+                            </div>
+                            <div class="asset-graph">
+                                <svg width="100" height="30" viewBox="0 0 100 30">
+                                    <path d="M0,10 Q25,25 50,15 T100,28" fill="none" stroke="#ff4d00"
+                                        stroke-width="2" />
+                                </svg>
+                            </div>
+                            <div class="asset-values">
+                                <div class="asset-price font-mono">₹145.20</div>
+                                <div class="asset-change negative font-mono">-5.2%</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- DEALS SECTION -->
+                <section class="deals-section">
+                    <div class="section-header">
+                        <h2>DEALS</h2>
+                        <button class="link-btn">VIEW ALL <i class="ph ph-arrow-right"></i></button>
+                    </div>
+                    <div class="deals-scroll">
+                        <div class="deal-card">
+                            <div class="deal-icon"><i class="ph-fill ph-spotify-logo"></i></div>
+                            <div class="deal-info">
+                                <h3>Spotify Premium</h3>
+                                <p>3 Months Free</p>
+                            </div>
+                            <div class="deal-tag">NEW</div>
+                        </div>
+                        <div class="deal-card">
+                            <div class="deal-icon"><i class="ph-fill ph-amazon-logo"></i></div>
+                            <div class="deal-info">
+                                <h3>AWS Credits</h3>
+                                <p>$5000 Startup Plan</p>
+                            </div>
+                            <div class="deal-tag">HOT</div>
+                        </div>
+                        <div class="deal-card">
+                            <div class="deal-icon"><i class="ph-fill ph-notion-logo"></i></div>
+                            <div class="deal-info">
+                                <h3>Notion AI</h3>
+                                <p>20% Off Annual</p>
+                            </div>
+                        </div>
+                        <div class="deal-card">
+                            <div class="deal-icon"><i class="ph-fill ph-figma-logo"></i></div>
+                            <div class="deal-info">
+                                <h3>Figma Pro</h3>
+                                <p>Student Pack</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- RIGHT SIDEBAR: AI CHAT WIP!!!-->
+        <aside class="sidebar-right" id="aiPanel" aria-hidden="true" role="complementary"
+            aria-label="Finance AI Assistant">
+            <div class="chat-header">
+                <div class="chat-title">
+                    <svg class="status-bot" width="48" height="48" viewBox="0 0 800 600"
+                        preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Antenna -->
+                        <line x1="50%" y1="32%" x2="50%" y2="26%" stroke="#1DB954" stroke-width="8"
+                            stroke-linecap="round" />
+                        <circle cx="50%" cy="24%" r="2%" fill="none" stroke="#1DB954" stroke-width="8" />
+
+                        <!-- Robot head -->
+                        <rect x="37%" y="32%" width="26%" height="36%" rx="6%" ry="6%" fill="none" stroke="#1DB954"
+                            stroke-width="8" />
+
+                        <!-- Eyes: dollar signs -->
+                        <text x="44%" y="48%" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif"
+                            font-weight="700" font-size="64" fill="#1DB954">$</text>
+                        <text x="56%" y="48%" text-anchor="middle" dominant-baseline="middle" font-family="sans-serif"
+                            font-weight="700" font-size="64" fill="#1DB954">$</text>
+
+                        <!-- Smile -->
+                        <path d="M344 348 q56 36 112 0" fill="none" stroke="#1DB954" stroke-width="8"
+                            stroke-linecap="round" />
+                    </svg>
+                    <span>FINANCE AI</span>
+                </div>
+                <button type="button" class="ai-close-btn" id="aiClose" aria-label="Close AI Assistant">
+                    <i class="ph ph-x"></i>
+                </button>
+            </div>
+            <div class="chat-window" id="chatWindow">
+                <div class="message ai">
+                    <p>Good evening. Your portfolio is up 2.4% today. Should I analyze your spending patterns?</p>
+                    <span class="time">10:42 PM</span>
+                </div>
+            </div>
+            <div class="chat-input-area"> <!-- this is just a dummy input! -->
+                <input type="text" id="chatInput" placeholder="Ask anything...">
+                <button id="sendBtn"><i class="ph-fill ph-arrow-right"></i></button>
+            </div>
+        </aside>
+    </div>
+
+    <svg class="sr-only" style="overflow: visible !important;" xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink">
+        <filter id="subscription-blur" width="500%" height="500%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="28" />
+        </filter>
+    </svg>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

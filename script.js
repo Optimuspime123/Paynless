@@ -446,11 +446,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.stopPropagation();
                 const index = btn.dataset.index;
                 const menu = document.querySelector(`.subscription-menu[data-index="${index}"]`);
-                
+
                 menus.forEach(m => {
                     if (m !== menu) m.classList.remove('active');
                 });
-                
+
                 menu.classList.toggle('active');
             });
         });
