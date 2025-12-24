@@ -1247,6 +1247,7 @@ body.ai-panel-active::before {
         border-bottom: var(--border-width) solid var(--border-color);
         overflow-y: visible;
         max-height: none;
+        order: 2;
     }
 
     .transaction-history {
@@ -1256,7 +1257,56 @@ body.ai-panel-active::before {
 
     .main-content {
         flex: 1;
-        order: 2;
+        order: 3;
+    }
+
+    /* Move top-bar to the very top on mobile */
+    .top-bar {
+        order: 1;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+    }
+
+    /* Make Paynless AI prominent on mobile */
+    .ai-toggle-btn {
+        order: -1;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        border: var(--border-width) solid var(--border-color);
+        color: #000;
+        padding: 0.75rem 1.25rem;
+        font-size: 1rem;
+        font-weight: 700;
+        box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.3);
+        animation: pulse-glow 2s ease-in-out infinite;
+    }
+
+    .ai-toggle-btn span {
+        display: inline;
+    }
+
+    .ai-toggle-btn i {
+        font-size: 1.25rem;
+    }
+
+    .ai-toggle-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(var(--primary-rgb), 0.4);
+    }
+
+    @keyframes pulse-glow {
+        0%, 100% {
+            box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.3);
+        }
+        50% {
+            box-shadow: 0 4px 20px rgba(var(--primary-rgb), 0.5);
+        }
+    }
+
+    /* Reorder header actions to put AI first */
+    .header-actions {
+        flex: 1;
+        justify-content: flex-end;
     }
 
     .sidebar-right {
@@ -1272,14 +1322,6 @@ body.ai-panel-active::before {
 
     .app-container.ai-collapsed .sidebar-right {
         transform: translateX(100%);
-    }
-
-    .ai-toggle-btn span {
-        display: none;
-    }
-
-    .ai-toggle-btn {
-        padding: 0.5rem;
     }
 
     .deals-scroll {
@@ -1332,12 +1374,14 @@ body.ai-panel-active::before {
         gap: 0.5rem;
     }
 
+    /* Keep AI button prominent on small screens */
     .ai-toggle-btn {
-        padding: 0.4rem;
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
     }
 
     .ai-toggle-btn i {
-        font-size: 1rem;
+        font-size: 1.1rem;
     }
 
     .theme-toggle {
