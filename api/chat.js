@@ -9,7 +9,7 @@ const responseSchema = {
   properties: {
     response: {
       type: Type.STRING,
-      description: 'The AI assistant\'s conversational response to the user',
+      description: 'The AI assistant\'s conversational response to the user. Avoid markdown or other formatting.',
     },
     update_balance: {
       type: Type.NUMBER,
@@ -23,11 +23,11 @@ const responseSchema = {
       properties: {
         name: {
           type: Type.STRING,
-          description: 'Name/description of the transaction',
+          description: 'Short name/description of the transaction (e.g., "Grocery", "Medicine", "Salary", "Movie", "Travel", "Food", "Shopping", "Subscription", "Health", "Entertainment", "Gift", "Transport", "Others")',
         },
         amount: {
           type: Type.NUMBER,
-          description: 'Transaction amount (positive for income, negative for expense)',
+          description: 'Transaction amount in INR (positive for income, negative for expense)',
         },
         type: {
           type: Type.STRING,
