@@ -1059,6 +1059,110 @@ body.ai-panel-active::before {
     font-family: var(--font-mono);
 }
 
+/* Typing Indicator */
+.message.typing {
+    padding: 0.75rem 1rem;
+}
+
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.typing-indicator span {
+    width: 8px;
+    height: 8px;
+    background: var(--primary);
+    border-radius: 50%;
+    animation: typingBounce 1.4s infinite ease-in-out both;
+}
+
+.typing-indicator span:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.typing-indicator span:nth-child(2) {
+    animation-delay: -0.16s;
+}
+
+.typing-indicator span:nth-child(3) {
+    animation-delay: 0s;
+}
+
+@keyframes typingBounce {
+    0%, 80%, 100% {
+        transform: scale(0.6);
+        opacity: 0.5;
+    }
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Balance update animation */
+.balance-updated {
+    animation: balancePulse 0.6s ease-out;
+}
+
+@keyframes balancePulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+        color: var(--primary);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Transaction new animation */
+.transaction-item.transaction-new {
+    animation: transactionSlideIn 0.5s ease-out;
+    background: linear-gradient(90deg, rgba(var(--primary-rgb), 0.15) 0%, transparent 100%);
+}
+
+@keyframes transactionSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Message fade in animation */
+.message {
+    animation: messageFadeIn 0.3s ease-out;
+}
+
+@keyframes messageFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Disabled state for chat input */
+#chatInput:disabled,
+#sendBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+#sendBtn:disabled:hover {
+    background: var(--primary);
+}
+
 .chat-input-area {
     padding: 1.5rem;
     border-top: var(--border-width) solid var(--border-color);

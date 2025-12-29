@@ -1,0 +1,10 @@
+# Vercel Ignore File
+.git
+.gitignore
+README.md
+LICENSE
+AGENTS.md
+codegen_instructions.md
+*.log
+.DS_Store
+Thumbs.db

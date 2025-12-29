@@ -164,53 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- CHAT INTERFACE ---
-    const chatInput = document.getElementById('chatInput');
-    const sendBtn = document.getElementById('sendBtn');
-    const chatWindow = document.getElementById('chatWindow');
-
-    function addMessage(text, isUser = false) {
-        const msgDiv = document.createElement('div');
-        msgDiv.className = `message ${isUser ? 'user' : 'ai'}`;
-
-        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-        msgDiv.innerHTML = `
-            <p>${text}</p>
-            <span class="time">${time}</span>
-        `;
-
-        chatWindow.appendChild(msgDiv);
-        chatWindow.scrollTop = chatWindow.scrollHeight;
-    }
-
-    function handleSend() {
-        const text = chatInput.value.trim();
-        if (!text) return;
-
-        addMessage(text, true);
-        chatInput.value = '';
-
-        // Simulate AI response
-        setTimeout(() => {
-            const responses = [
-                "I've updated your budget based on that.",
-                "Analyzing the market trends for you...",
-                "That sounds like a good financial move.",
-                "I've noted that expense in your ledger.",
-                "Would you like to see a breakdown of that?"
-            ];
-            const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-            addMessage(randomResponse, false);
-        }, 1000);
-    }
-
-    sendBtn.addEventListener('click', handleSend);
-    chatInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') handleSend();
-    });
-
-    // --- TRANSACTION HISTORY ---
+    // --- TRANSACTION HISTORY DATA (moved up for AI access) ---
     const transactionData = [
         { name: 'Salary Deposit', date: 'Nov 25', amount: 85000, type: 'income', icon: 'ph-bank' },
         { name: 'Rent Payment', date: 'Nov 24', amount: -25000, type: 'expense', icon: 'ph-house' },
@@ -224,6 +178,282 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const transactionList = document.getElementById('transactionList');
 
+    // --- SUBSCRIPTIONS DATA (moved up for AI access) ---
+    const subscriptionsData = [
+        {
+            name: 'Discord Nitro',
+            status: 'active',
+            price: '₹649',
+            logo: 'https://assets.codepen.io/605876/discord.png',
+            manageUrl: 'https://discord.com/settings/subscriptions'
+        },
+        {
+            name: 'Claude Pro',
+            status: 'active',
+            price: '₹1,650',
+            logo: 'https://techshark.io/media/tool_logo/Claude_AI_Logo.png',
+            manageUrl: 'https://claude.ai/settings/billing'
+        },
+        {
+            name: 'Telegram Premium',
+            status: 'active',
+            price: '₹469',
+            logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/2048px-Telegram_2019_Logo.svg.png',
+            manageUrl: 'https://telegram.org/'
+        },
+        {
+            name: 'Netflix Basic',
+            status: 'active',
+            price: '₹199',
+            logo: 'https://static.vecteezy.com/system/resources/previews/017/396/814/non_2x/netflix-mobile-application-logo-free-png.png',
+            manageUrl: 'https://www.netflix.com/youraccount'
+        },
+        {
+            name: 'Spotify Premium',
+            status: 'trial',
+            price: '₹119',
+            logo: 'https://assets.codepen.io/605876/spotify.png',
+            manageUrl: 'https://www.spotify.com/account/subscription/'
+        },
+        {
+            name: 'Disney+',
+            status: 'expired',
+            price: '₹299',
+            logo: 'https://logo.wine/a/logo/Disney%2B/Disney%2B-White-Dark-Background-Logo.wine.svg',
+            manageUrl: 'https://www.hotstar.com/settings'
+        }
+    ];
+
+    // --- AI CHAT INTERFACE ---
+    const chatInput = document.getElementById('chatInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const chatWindow = document.getElementById('chatWindow');
+    
+    // Multi-turn conversation history
+    let conversationHistory = [];
+    
+    // Current wallet balance (synced with UI)
+    let currentBalance = 124592;
+    
+    // Track if AI is currently processing
+    let isProcessing = false;
+
+    function formatBalance(amount) {
+        return `₹${amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+
+    function addMessage(text, isUser = false, isTyping = false) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${isUser ? 'user' : 'ai'}${isTyping ? ' typing' : ''}`;
+
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        if (isTyping) {
+            msgDiv.innerHTML = `
+                <div class="typing-indicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            `;
+        } else {
+            msgDiv.innerHTML = `
+                <p>${text}</p>
+                <span class="time">${time}</span>
+            `;
+        }
+
+        chatWindow.appendChild(msgDiv);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+        
+        return msgDiv;
+    }
+
+    function removeTypingIndicator() {
+        const typingMsg = chatWindow.querySelector('.message.typing');
+        if (typingMsg) {
+            typingMsg.remove();
+        }
+    }
+
+    function updateBalanceUI(newBalance) {
+        currentBalance = newBalance;
+        const balanceElement = document.querySelector('.balance');
+        if (balanceElement) {
+            balanceElement.textContent = formatBalance(newBalance);
+            balanceElement.classList.add('balance-updated');
+            setTimeout(() => balanceElement.classList.remove('balance-updated'), 600);
+        }
+        
+        // Recalculate earnings and spending from transactions
+        updateWalletStats();
+    }
+
+    function updateWalletStats() {
+        const earnings = transactionData.filter(tx => tx.amount > 0).reduce((sum, tx) => sum + tx.amount, 0);
+        const spending = Math.abs(transactionData.filter(tx => tx.amount < 0).reduce((sum, tx) => sum + tx.amount, 0));
+        
+        const earningsElement = document.querySelector('.stat.positive .value');
+        const spendingElement = document.querySelector('.stat.negative .value');
+        
+        if (earningsElement) {
+            earningsElement.textContent = `₹${earnings.toLocaleString('en-IN')}`;
+        }
+        if (spendingElement) {
+            spendingElement.textContent = `₹${spending.toLocaleString('en-IN')}`;
+        }
+    }
+
+    function addTransactionToData(transaction, skipBalanceUpdate = false) {
+        const today = new Date();
+        const dateStr = today.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        
+        const newTx = {
+            name: transaction.name,
+            date: dateStr,
+            amount: transaction.amount,
+            type: transaction.type || (transaction.amount >= 0 ? 'income' : 'expense'),
+            icon: transaction.icon || (transaction.amount >= 0 ? 'ph-money' : 'ph-shopping-cart')
+        };
+        
+        // Add to beginning of array (most recent first)
+        transactionData.unshift(newTx);
+        
+        // Update the balance (unless skip is specified, which happens when update_balance is also provided)
+        if (!skipBalanceUpdate) {
+            currentBalance += transaction.amount;
+            updateBalanceUI(currentBalance);
+        }
+        
+        // Re-render transactions with animation
+        renderTransactions();
+        
+        // Highlight the new transaction
+        setTimeout(() => {
+            const firstItem = transactionList.querySelector('.transaction-item');
+            if (firstItem) {
+                firstItem.classList.add('transaction-new');
+                setTimeout(() => firstItem.classList.remove('transaction-new'), 1000);
+            }
+        }, 50);
+    }
+
+    function removeTransactionFromData(index) {
+        if (index >= 0 && index < transactionData.length) {
+            const removedTx = transactionData[index];
+            
+            // Reverse the transaction effect on balance
+            currentBalance -= removedTx.amount;
+            updateBalanceUI(currentBalance);
+            
+            // Remove the transaction
+            transactionData.splice(index, 1);
+            
+            // Re-render
+            renderTransactions();
+        }
+    }
+
+    async function sendToAI(userMessage) {
+        if (isProcessing) return;
+        
+        isProcessing = true;
+        sendBtn.disabled = true;
+        chatInput.disabled = true;
+        
+        // Add typing indicator
+        addMessage('', false, true);
+        
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: userMessage,
+                    history: conversationHistory,
+                    balance: currentBalance,
+                    transactions: transactionData,
+                    subscriptions: subscriptionsData,
+                }),
+            });
+
+            const result = await response.json();
+            
+            // Remove typing indicator
+            removeTypingIndicator();
+
+            if (result.success && result.data) {
+                const data = result.data;
+                
+                // Add AI response to chat
+                addMessage(data.response, false);
+                
+                // Update conversation history for multi-turn context
+                conversationHistory.push({ role: 'user', text: userMessage });
+                conversationHistory.push({ role: 'model', text: data.response });
+                
+                // Keep conversation history manageable (last 20 turns)
+                if (conversationHistory.length > 40) {
+                    conversationHistory = conversationHistory.slice(-40);
+                }
+                
+                // Handle structured actions
+                // If both update_balance and add_transaction are provided, use update_balance as authoritative
+                const hasExplicitBalanceUpdate = data.update_balance !== null && data.update_balance !== undefined;
+                
+                if (hasExplicitBalanceUpdate) {
+                    updateBalanceUI(data.update_balance);
+                }
+                
+                if (data.add_transaction) {
+                    // Skip balance update in addTransactionToData if we already got an explicit balance update
+                    addTransactionToData(data.add_transaction, hasExplicitBalanceUpdate);
+                }
+                
+                if (data.remove_transaction !== null && data.remove_transaction !== undefined) {
+                    removeTransactionFromData(data.remove_transaction);
+                }
+                
+            } else {
+                // Handle error response
+                const errorMsg = result.data?.response || result.error || 'Something went wrong. Please try again.';
+                addMessage(errorMsg, false);
+            }
+            
+        } catch (error) {
+            console.error('Chat error:', error);
+            removeTypingIndicator();
+            addMessage('I\'m having trouble connecting right now. Please check your connection and try again.', false);
+        } finally {
+            isProcessing = false;
+            sendBtn.disabled = false;
+            chatInput.disabled = false;
+            chatInput.focus();
+        }
+    }
+
+    function handleSend() {
+        const text = chatInput.value.trim();
+        if (!text || isProcessing) return;
+
+        addMessage(text, true);
+        chatInput.value = '';
+
+        // Send to AI
+        sendToAI(text);
+    }
+
+    sendBtn.addEventListener('click', handleSend);
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSend();
+        }
+    });
+
+    // --- TRANSACTION HISTORY RENDERING ---
     function renderTransactions() {
         transactionList.innerHTML = '';
         transactionData.forEach(tx => {
@@ -352,51 +582,6 @@ document.addEventListener('DOMContentLoaded', () => {
     matrixCard.addEventListener('mouseleave', stopMatrix);
 
     // --- SUBSCRIPTIONS SECTION ---
-    const subscriptionsData = [
-        {
-            name: 'Discord Nitro',
-            status: 'active',
-            price: '₹649',
-            logo: 'https://assets.codepen.io/605876/discord.png',
-            manageUrl: 'https://discord.com/settings/subscriptions'
-        },
-        {
-            name: 'Claude Pro',
-            status: 'active',
-            price: '₹1,650',
-            logo: 'https://techshark.io/media/tool_logo/Claude_AI_Logo.png',
-            manageUrl: 'https://claude.ai/settings/billing'
-        },
-        {
-            name: 'Telegram Premium',
-            status: 'active',
-            price: '₹469',
-            logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/2048px-Telegram_2019_Logo.svg.png',
-            manageUrl: 'https://telegram.org/'
-        },
-        {
-            name: 'Netflix Basic',
-            status: 'active',
-            price: '₹199',
-            logo: 'https://static.vecteezy.com/system/resources/previews/017/396/814/non_2x/netflix-mobile-application-logo-free-png.png',
-            manageUrl: 'https://www.netflix.com/youraccount'
-        },
-        {
-            name: 'Spotify Premium',
-            status: 'trial',
-            price: '₹119',
-            logo: 'https://assets.codepen.io/605876/spotify.png',
-            manageUrl: 'https://www.spotify.com/account/subscription/'
-        },
-        {
-            name: 'Disney+',
-            status: 'expired',
-            price: '₹299',
-            logo: 'https://logo.wine/a/logo/Disney%2B/Disney%2B-White-Dark-Background-Logo.wine.svg',
-            manageUrl: 'https://www.hotstar.com/settings'
-        }
-    ];
-
     const subscriptionsGrid = document.getElementById('subscriptionsGrid');
 
     function renderSubscriptions() {
