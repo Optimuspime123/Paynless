@@ -164,54 +164,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- CHAT INTERFACE ---
-    const chatInput = document.getElementById('chatInput');
-    const sendBtn = document.getElementById('sendBtn');
-    const chatWindow = document.getElementById('chatWindow');
+    // --- LOCAL STORAGE KEYS ---
+    const STORAGE_KEYS = {
+        balance: 'paynless_balance',
+        transactions: 'paynless_transactions',
+        conversationHistory: 'paynless_chat_history'
+    };
 
-    function addMessage(text, isUser = false) {
-        const msgDiv = document.createElement('div');
-        msgDiv.className = `message ${isUser ? 'user' : 'ai'}`;
-
-        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-        msgDiv.innerHTML = `
-            <p>${text}</p>
-            <span class="time">${time}</span>
-        `;
-
-        chatWindow.appendChild(msgDiv);
-        chatWindow.scrollTop = chatWindow.scrollHeight;
-    }
-
-    function handleSend() {
-        const text = chatInput.value.trim();
-        if (!text) return;
-
-        addMessage(text, true);
-        chatInput.value = '';
-
-        // Simulate AI response
-        setTimeout(() => {
-            const responses = [
-                "I've updated your budget based on that.",
-                "Analyzing the market trends for you...",
-                "That sounds like a good financial move.",
-                "I've noted that expense in your ledger.",
-                "Would you like to see a breakdown of that?"
-            ];
-            const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-            addMessage(randomResponse, false);
-        }, 1000);
-    }
-
-    sendBtn.addEventListener('click', handleSend);
-    chatInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') handleSend();
-    });
-
-    // --- TRANSACTION HISTORY ---
-    const transactionData = [
+    // --- DEFAULT TRANSACTION DATA ---
+    const defaultTransactions = [
         { name: 'Salary Deposit', date: 'Nov 25', amount: 85000, type: 'income', icon: 'ph-bank' },
         { name: 'Rent Payment', date: 'Nov 24', amount: -25000, type: 'expense', icon: 'ph-house' },
         { name: 'Freelance Project', date: 'Nov 23', amount: 15000, type: 'income', icon: 'ph-code' },
@@ -222,8 +183,422 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: 'Electricity', date: 'Nov 18', amount: -890, type: 'expense', icon: 'ph-lightning' }
     ];
 
+    // --- LOAD FROM LOCAL STORAGE OR USE DEFAULTS ---
+    function loadFromStorage(key, defaultValue) {
+        try {
+            const stored = localStorage.getItem(key);
+            if (stored) {
+                return JSON.parse(stored);
+            }
+        } catch (e) {
+            console.error('Error loading from localStorage:', e);
+        }
+        return defaultValue;
+    }
+
+    function saveToStorage(key, value) {
+        try {
+            localStorage.setItem(key, JSON.stringify(value));
+        } catch (e) {
+            console.error('Error saving to localStorage:', e);
+        }
+    }
+
+    // --- TRANSACTION HISTORY DATA (loaded from storage or defaults) ---
+    const transactionData = loadFromStorage(STORAGE_KEYS.transactions, defaultTransactions);
+
     const transactionList = document.getElementById('transactionList');
 
+    // --- SUBSCRIPTIONS DATA (moved up for AI access) ---
+    const subscriptionsData = [
+        {
+            name: 'Discord Nitro',
+            status: 'active',
+            price: '₹649',
+            logo: 'https://assets.codepen.io/605876/discord.png',
+            manageUrl: 'https://discord.com/settings/subscriptions'
+        },
+        {
+            name: 'Claude Pro',
+            status: 'active',
+            price: '₹1,650',
+            logo: 'https://techshark.io/media/tool_logo/Claude_AI_Logo.png',
+            manageUrl: 'https://claude.ai/settings/billing'
+        },
+        {
+            name: 'Telegram Premium',
+            status: 'active',
+            price: '₹469',
+            logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/2048px-Telegram_2019_Logo.svg.png',
+            manageUrl: 'https://telegram.org/'
+        },
+        {
+            name: 'Netflix Basic',
+            status: 'active',
+            price: '₹199',
+            logo: 'https://static.vecteezy.com/system/resources/previews/017/396/814/non_2x/netflix-mobile-application-logo-free-png.png',
+            manageUrl: 'https://www.netflix.com/youraccount'
+        },
+        {
+            name: 'Spotify Premium',
+            status: 'trial',
+            price: '₹119',
+            logo: 'https://assets.codepen.io/605876/spotify.png',
+            manageUrl: 'https://www.spotify.com/account/subscription/'
+        },
+        {
+            name: 'Disney+',
+            status: 'expired',
+            price: '₹299',
+            logo: 'https://logo.wine/a/logo/Disney%2B/Disney%2B-White-Dark-Background-Logo.wine.svg',
+            manageUrl: 'https://www.hotstar.com/settings'
+        }
+    ];
+
+    // --- AI CHAT INTERFACE ---
+    const chatInput = document.getElementById('chatInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const chatWindow = document.getElementById('chatWindow');
+    const imageInput = document.getElementById('imageInput');
+    const uploadBtn = document.getElementById('uploadBtn');
+    
+    // Multi-turn conversation history (loaded from storage)
+    let conversationHistory = loadFromStorage(STORAGE_KEYS.conversationHistory, []);
+    
+    // Current wallet balance (loaded from storage or default)
+    let currentBalance = loadFromStorage(STORAGE_KEYS.balance, 124592);
+    
+    // Track if AI is currently processing
+    let isProcessing = false;
+    
+    // Track pending image for upload
+    let pendingImage = null;
+
+    // Initialize balance display from stored value
+    function initializeBalanceDisplay() {
+        const balanceElement = document.querySelector('.balance');
+        if (balanceElement) {
+            balanceElement.textContent = formatBalance(currentBalance);
+        }
+    }
+    
+    // Image upload handling
+    function handleImageSelect(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            addMessage('Please select a valid image file.', false);
+            return;
+        }
+        
+        // Validate file size (max 10MB)
+        if (file.size > 10 * 1024 * 1024) {
+            addMessage('Image is too large. Please select an image under 10MB.', false);
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            pendingImage = {
+                data: e.target.result.split(',')[1], // Base64 data without prefix
+                mimeType: file.type,
+                name: file.name
+            };
+            
+            // Update upload button to show image is attached
+            uploadBtn.classList.add('has-image');
+            uploadBtn.innerHTML = '<i class="ph ph-check"></i>';
+            uploadBtn.title = `Image attached: ${file.name}`;
+            
+            // Update placeholder to indicate image is attached
+            chatInput.placeholder = `Image attached: ${file.name.substring(0, 20)}...`;
+        };
+        reader.readAsDataURL(file);
+    }
+    
+    function clearPendingImage() {
+        pendingImage = null;
+        imageInput.value = '';
+        uploadBtn.classList.remove('has-image');
+        uploadBtn.innerHTML = '<i class="ph ph-image"></i>';
+        uploadBtn.title = 'Upload receipt or bill';
+        chatInput.placeholder = 'Ask anything...';
+    }
+    
+    // Setup image upload event listeners
+    if (uploadBtn && imageInput) {
+        uploadBtn.addEventListener('click', () => {
+            if (pendingImage) {
+                // If already has image, clear it
+                clearPendingImage();
+            } else {
+                imageInput.click();
+            }
+        });
+        
+        imageInput.addEventListener('change', handleImageSelect);
+    }
+
+    function formatBalance(amount) {
+        return `₹${amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+
+    function addMessage(text, isUser = false, isTyping = false, imageData = null) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${isUser ? 'user' : 'ai'}${isTyping ? ' typing' : ''}`;
+
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        if (isTyping) {
+            msgDiv.innerHTML = `
+                <div class="typing-indicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            `;
+        } else {
+            let imageHtml = '';
+            if (imageData) {
+                imageHtml = `<img src="data:${imageData.mimeType};base64,${imageData.data}" alt="Uploaded image" class="message-image">`;
+            }
+            msgDiv.innerHTML = `
+                ${imageHtml}
+                <p>${text}</p>
+                <span class="time">${time}</span>
+            `;
+        }
+
+        chatWindow.appendChild(msgDiv);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+        
+        return msgDiv;
+    }
+
+    function removeTypingIndicator() {
+        const typingMsg = chatWindow.querySelector('.message.typing');
+        if (typingMsg) {
+            typingMsg.remove();
+        }
+    }
+
+    function updateBalanceUI(newBalance) {
+        currentBalance = newBalance;
+        const balanceElement = document.querySelector('.balance');
+        if (balanceElement) {
+            balanceElement.textContent = formatBalance(newBalance);
+            balanceElement.classList.add('balance-updated');
+            setTimeout(() => balanceElement.classList.remove('balance-updated'), 600);
+        }
+        
+        // Save to localStorage
+        saveToStorage(STORAGE_KEYS.balance, currentBalance);
+        
+        // Recalculate earnings and spending from transactions
+        updateWalletStats();
+    }
+
+    function updateWalletStats() {
+        const earnings = transactionData.filter(tx => tx.amount > 0).reduce((sum, tx) => sum + tx.amount, 0);
+        const spending = Math.abs(transactionData.filter(tx => tx.amount < 0).reduce((sum, tx) => sum + tx.amount, 0));
+        
+        const earningsElement = document.querySelector('.stat.positive .value');
+        const spendingElement = document.querySelector('.stat.negative .value');
+        
+        if (earningsElement) {
+            earningsElement.textContent = `₹${earnings.toLocaleString('en-IN')}`;
+        }
+        if (spendingElement) {
+            spendingElement.textContent = `₹${spending.toLocaleString('en-IN')}`;
+        }
+    }
+
+    function addTransactionToData(transaction, skipBalanceUpdate = false) {
+        const today = new Date();
+        const dateStr = today.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        
+        const newTx = {
+            name: transaction.name,
+            date: dateStr,
+            amount: transaction.amount,
+            type: transaction.type || (transaction.amount >= 0 ? 'income' : 'expense'),
+            icon: transaction.icon || (transaction.amount >= 0 ? 'ph-money' : 'ph-shopping-cart')
+        };
+        
+        // Add to beginning of array (most recent first)
+        transactionData.unshift(newTx);
+        
+        // Save transactions to localStorage
+        saveToStorage(STORAGE_KEYS.transactions, transactionData);
+        
+        // Update the balance (unless skip is specified, which happens when update_balance is also provided)
+        if (!skipBalanceUpdate) {
+            currentBalance += transaction.amount;
+            updateBalanceUI(currentBalance);
+        }
+        
+        // Re-render transactions with animation
+        renderTransactions();
+        
+        // Highlight the new transaction
+        setTimeout(() => {
+            const firstItem = transactionList.querySelector('.transaction-item');
+            if (firstItem) {
+                firstItem.classList.add('transaction-new');
+                setTimeout(() => firstItem.classList.remove('transaction-new'), 1000);
+            }
+        }, 50);
+    }
+
+    function removeTransactionFromData(index) {
+        if (index >= 0 && index < transactionData.length) {
+            const removedTx = transactionData[index];
+            
+            // Reverse the transaction effect on balance
+            currentBalance -= removedTx.amount;
+            updateBalanceUI(currentBalance);
+            
+            // Remove the transaction
+            transactionData.splice(index, 1);
+            
+            // Save transactions to localStorage
+            saveToStorage(STORAGE_KEYS.transactions, transactionData);
+            
+            // Re-render
+            renderTransactions();
+        }
+    }
+
+    async function sendToAI(userMessage, imageData = null) {
+        if (isProcessing) return;
+        
+        isProcessing = true;
+        sendBtn.disabled = true;
+        chatInput.disabled = true;
+        if (uploadBtn) uploadBtn.disabled = true;
+        
+        // Add typing indicator
+        addMessage('', false, true);
+        
+        try {
+            // Build request body
+            const requestBody = {
+                message: userMessage,
+                history: conversationHistory,
+                balance: currentBalance,
+                transactions: transactionData,
+                subscriptions: subscriptionsData,
+            };
+            
+            // Add image data if present
+            if (imageData) {
+                requestBody.image = {
+                    data: imageData.data,
+                    mimeType: imageData.mimeType
+                };
+            }
+            
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestBody),
+            });
+
+            const result = await response.json();
+            
+            // Remove typing indicator
+            removeTypingIndicator();
+
+            if (result.success && result.data) {
+                const data = result.data;
+                
+                // Add AI response to chat
+                addMessage(data.response, false);
+                
+                // Update conversation history for multi-turn context
+                conversationHistory.push({ role: 'user', text: userMessage });
+                conversationHistory.push({ role: 'model', text: data.response });
+                
+                // Keep conversation history manageable (last 20 turns)
+                if (conversationHistory.length > 40) {
+                    conversationHistory = conversationHistory.slice(-40);
+                }
+                
+                // Save conversation history to localStorage
+                saveToStorage(STORAGE_KEYS.conversationHistory, conversationHistory);
+                
+                // Handle structured actions
+                // If both update_balance and add_transaction are provided, use update_balance as authoritative
+                const hasExplicitBalanceUpdate = data.update_balance !== null && data.update_balance !== undefined;
+                
+                if (hasExplicitBalanceUpdate) {
+                    updateBalanceUI(data.update_balance);
+                }
+                
+                if (data.add_transaction) {
+                    // Skip balance update in addTransactionToData if we already got an explicit balance update
+                    addTransactionToData(data.add_transaction, hasExplicitBalanceUpdate);
+                }
+                
+                if (data.remove_transaction !== null && data.remove_transaction !== undefined) {
+                    removeTransactionFromData(data.remove_transaction);
+                }
+                
+            } else {
+                // Handle error response
+                const errorMsg = result.data?.response || result.error || 'Something went wrong. Please try again.';
+                addMessage(errorMsg, false);
+            }
+            
+        } catch (error) {
+            console.error('Chat error:', error);
+            removeTypingIndicator();
+            addMessage('I\'m having trouble connecting right now. Please check your connection and try again.', false);
+        } finally {
+            isProcessing = false;
+            sendBtn.disabled = false;
+            chatInput.disabled = false;
+            if (uploadBtn) uploadBtn.disabled = false;
+            chatInput.focus();
+        }
+    }
+
+    function handleSend() {
+        const text = chatInput.value.trim();
+        
+        // Allow sending with just an image (with default prompt)
+        if (!text && !pendingImage) return;
+        if (isProcessing) return;
+        
+        const messageText = text || 'Please analyze this image.';
+        const imageToSend = pendingImage;
+
+        // Add user message with image if present
+        addMessage(messageText, true, false, imageToSend);
+        chatInput.value = '';
+
+        // Clear the pending image after sending
+        if (pendingImage) {
+            clearPendingImage();
+        }
+
+        // Send to AI with optional image
+        sendToAI(messageText, imageToSend);
+    }
+
+    sendBtn.addEventListener('click', handleSend);
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSend();
+        }
+    });
+
+    // --- TRANSACTION HISTORY RENDERING ---
     function renderTransactions() {
         transactionList.innerHTML = '';
         transactionData.forEach(tx => {
@@ -352,51 +727,6 @@ document.addEventListener('DOMContentLoaded', () => {
     matrixCard.addEventListener('mouseleave', stopMatrix);
 
     // --- SUBSCRIPTIONS SECTION ---
-    const subscriptionsData = [
-        {
-            name: 'Discord Nitro',
-            status: 'active',
-            price: '₹649',
-            logo: 'https://assets.codepen.io/605876/discord.png',
-            manageUrl: 'https://discord.com/settings/subscriptions'
-        },
-        {
-            name: 'Claude Pro',
-            status: 'active',
-            price: '₹1,650',
-            logo: 'https://techshark.io/media/tool_logo/Claude_AI_Logo.png',
-            manageUrl: 'https://claude.ai/settings/billing'
-        },
-        {
-            name: 'Telegram Premium',
-            status: 'active',
-            price: '₹469',
-            logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/2048px-Telegram_2019_Logo.svg.png',
-            manageUrl: 'https://telegram.org/'
-        },
-        {
-            name: 'Netflix Basic',
-            status: 'active',
-            price: '₹199',
-            logo: 'https://static.vecteezy.com/system/resources/previews/017/396/814/non_2x/netflix-mobile-application-logo-free-png.png',
-            manageUrl: 'https://www.netflix.com/youraccount'
-        },
-        {
-            name: 'Spotify Premium',
-            status: 'trial',
-            price: '₹119',
-            logo: 'https://assets.codepen.io/605876/spotify.png',
-            manageUrl: 'https://www.spotify.com/account/subscription/'
-        },
-        {
-            name: 'Disney+',
-            status: 'expired',
-            price: '₹299',
-            logo: 'https://logo.wine/a/logo/Disney%2B/Disney%2B-White-Dark-Background-Logo.wine.svg',
-            manageUrl: 'https://www.hotstar.com/settings'
-        }
-    ];
-
     const subscriptionsGrid = document.getElementById('subscriptionsGrid');
 
     function renderSubscriptions() {
@@ -492,4 +822,6 @@ document.addEventListener('DOMContentLoaded', () => {
     renderPortfolio('crypto');
     renderTransactions();
     renderSubscriptions();
+    initializeBalanceDisplay();
+    updateWalletStats();
 });
