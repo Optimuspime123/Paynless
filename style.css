@@ -1177,16 +1177,20 @@ body.ai-panel-active::before {
 }
 
 .chat-input-area {
-    padding: 1.5rem;
+    padding: 1rem;
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
     border-top: var(--border-width) solid var(--border-color);
     display: flex;
     gap: 0.5rem;
     flex-shrink: 0;
     background: var(--bg-sidebar);
+    overflow-x: auto;
+    overflow-y: hidden;
 }
 
 #chatInput {
     flex: 1;
+    min-width: 100px;
     background: var(--bg-panel);
     border: 1px solid var(--border-color);
     padding: 0.75rem;
@@ -1196,6 +1200,7 @@ body.ai-panel-active::before {
     border-radius: var(--radius-sm);
     font-size: 16px;
     min-height: 44px;
+    max-height: 120px;
 }
 
 #chatInput:focus {
@@ -1215,6 +1220,7 @@ body.ai-panel-active::before {
     justify-content: center;
     transition: all 0.2s;
     border-radius: var(--radius-sm);
+    flex-shrink: 0;
 }
 
 #sendBtn:hover {
@@ -1431,6 +1437,22 @@ body.ai-panel-active::before {
         width: var(--chat-width);
         z-index: 100;
         box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+    }
+    
+    .chat-window {
+        flex: 1;
+        min-height: 0;
+    }
+    
+    .chat-input-area {
+        flex-shrink: 0;
+        max-height: 50vh;
+        overflow: hidden;
     }
 
     .app-container.ai-collapsed .sidebar-right {
@@ -1529,12 +1551,29 @@ body.ai-panel-active::before {
         max-width: 100%;
         z-index: 200;
         box-shadow: none;
-        padding-bottom: env(safe-area-inset-bottom);
+        padding-bottom: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        height: 100dvh;
+    }
+    
+    .chat-header {
+        flex-shrink: 0;
+    }
+    
+    .chat-window {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
     }
     
     .chat-input-area {
+        flex-shrink: 0;
         padding: 1rem;
         padding-bottom: max(1rem, env(safe-area-inset-bottom));
+        max-height: 50vh;
+        overflow: hidden;
     }
     
     /* Increase touch target sizes for mobile */
