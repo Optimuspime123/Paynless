@@ -824,4 +824,39 @@ document.addEventListener('DOMContentLoaded', () => {
     renderSubscriptions();
     initializeBalanceDisplay();
     updateWalletStats();
+
+    // --- AI TOGGLE COMET ANIMATION ---
+    const aiBtn = document.querySelector('.ai-toggle-btn');
+    if (aiBtn) {
+        const rects = aiBtn.querySelectorAll('rect');
+
+        // ResizeObserver for responsive SVG sizing
+        const observer = new ResizeObserver(entries => {
+            for (const entry of entries) {
+                let height;
+                if (entry.borderBoxSize) {
+                    const borderBoxSize = Array.isArray(entry.borderBoxSize) ? entry.borderBoxSize[0] : entry.borderBoxSize;
+                    height = borderBoxSize.blockSize;
+                } else {
+                    height = entry.contentRect.height; // Fallback, might be inaccurate with padding
+                }
+
+                // Ensure pill shape
+                const rx = height / 2;
+                rects.forEach(rect => {
+                    rect.setAttribute('rx', rx);
+                    rect.setAttribute('ry', rx);
+                });
+            }
+        });
+
+        observer.observe(aiBtn);
+
+        // Initial Animation Loop (Twice)
+        // 2 loops * 2s duration = 4000ms
+        aiBtn.classList.add('animating');
+        setTimeout(() => {
+            aiBtn.classList.remove('animating');
+        }, 4000);
+    }
 });

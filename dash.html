@@ -81,6 +81,25 @@
                     <div class="demo-badge">DEMO</div>
                     <button type="button" class="ai-toggle-btn" id="aiToggle" aria-label="Open AI Assistant"
                         aria-expanded="false" aria-controls="aiPanel">
+                        <svg class="ai-toggle-border-svg" aria-hidden="true">
+                            <defs>
+                                <linearGradient id="cometGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="var(--accent)" stop-opacity="0" />
+                                    <stop offset="40%" stop-color="var(--accent)" stop-opacity="0.5" />
+                                    <stop offset="100%" stop-color="var(--primary)" />
+                                </linearGradient>
+                                <filter id="headGlow" x="-50%" y="-50%" width="200%" height="200%">
+                                    <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                                    <feMerge>
+                                        <feMergeNode in="coloredBlur" />
+                                        <feMergeNode in="SourceGraphic" />
+                                    </feMerge>
+                                </filter>
+                            </defs>
+                            <rect class="border-base" width="100%" height="100%" rx="0" ry="0" />
+                            <rect class="border-tail" width="100%" height="100%" pathLength="1" stroke-linecap="round" />
+                            <rect class="border-head" width="100%" height="100%" pathLength="1" stroke-linecap="round" />
+                        </svg>
                         <i class="ph ph-chats-circle"></i>
                         <span>Paynless AI</span>
                     </button>

@@ -1330,11 +1330,12 @@ body.ai-panel-active::before {
 
 /* --- AI TOGGLE BUTTON --- */
 .ai-toggle-btn {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    border: var(--border-width) solid var(--border-color);
-    color: #000;
+    position: relative;
+    background: var(--bg-panel);
+    border: none;
+    color: var(--text-main);
     padding: 0.5rem 1rem;
-    border-radius: var(--radius-sm);
+    border-radius: 9999px;
     font-family: var(--font-body);
     font-weight: 700;
     font-size: 0.875rem;
@@ -1342,18 +1343,82 @@ body.ai-panel-active::before {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    transition: all 0.2s ease;
-    box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.4),
-        0 0 40px rgba(var(--primary-rgb), 0.2),
-        0 4px 12px rgba(var(--primary-rgb), 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    /* Box shadow for depth, but not the glow itself (handled by SVG) */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .ai-toggle-btn:hover {
-    border-color: var(--primary);
     transform: translateY(-2px);
-    box-shadow: 0 0 28px rgba(var(--primary-rgb), 0.5),
-        0 0 56px rgba(var(--primary-rgb), 0.3),
-        0 6px 20px rgba(var(--primary-rgb), 0.4);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* SVG Container */
+.ai-toggle-border-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: visible;
+}
+
+/* Content above SVG */
+.ai-toggle-btn i,
+.ai-toggle-btn span {
+    position: relative;
+    z-index: 2;
+}
+
+/* Base Border (Static) */
+.border-base {
+    fill: none;
+    stroke: var(--border-color);
+    stroke-width: 2px;
+}
+
+/* Comet Tail */
+.border-tail {
+    fill: none;
+    stroke: url(#cometGradient);
+    stroke-width: 2px;
+    stroke-dasharray: 0.5 0.5; /* Longer tail (50%) */
+    stroke-dashoffset: 1;
+    opacity: 0;
+    transition: opacity 0.8s ease-out;
+    will-change: stroke-dashoffset, opacity;
+}
+
+/* Comet Head */
+.border-head {
+    fill: none;
+    stroke: #ffffff;
+    stroke-width: 3px; /* Slightly thicker head */
+    stroke-dasharray: 0.001 0.999; /* Tiny dot */
+    stroke-dashoffset: 1;
+    opacity: 0;
+    transition: opacity 0.8s ease-out;
+    filter: url(#headGlow);
+    will-change: stroke-dashoffset, opacity;
+}
+
+/* Animation Classes */
+.ai-toggle-btn.animating .border-tail,
+.ai-toggle-btn.animating .border-head,
+.ai-toggle-btn:hover .border-tail,
+.ai-toggle-btn:hover .border-head {
+    opacity: 1;
+    animation: cometMove 3s linear infinite;
+}
+
+@keyframes cometMove {
+    0% {
+        stroke-dashoffset: 1;
+    }
+    100% {
+        stroke-dashoffset: 0;
+    }
 }
 
 .ai-toggle-btn i {
@@ -1361,16 +1426,17 @@ body.ai-panel-active::before {
 }
 
 .ai-toggle-btn.is-active {
-    background: linear-gradient(135deg, var(--accent), var(--primary));
-    border-color: var(--accent);
-    color: #000;
-    box-shadow: 0 0 24px rgba(var(--primary-rgb), 0.5),
-        0 0 48px rgba(var(--primary-rgb), 0.3),
-        0 4px 16px rgba(var(--primary-rgb), 0.4);
+    background: var(--bg-panel);
+    color: var(--text-main);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.ai-toggle-btn.is-active .border-base {
+    stroke: var(--accent);
 }
 
 .ai-toggle-btn.is-active i {
-    color: #000;
+    color: var(--primary);
 }
 
 .ai-toggle-btn:focus-visible,
@@ -1510,15 +1576,13 @@ body.ai-panel-active::before {
     /* Make Paynless AI prominent on mobile */
     .ai-toggle-btn {
         order: -1;
-        background: linear-gradient(135deg, var(--primary), var(--accent));
-        border: var(--border-width) solid var(--border-color);
-        color: #000;
+        background: var(--bg-panel);
+        border: none;
+        color: var(--text-main);
         padding: 0.75rem 1.25rem;
         font-size: 1rem;
         font-weight: 700;
-        box-shadow: 0 0 24px rgba(var(--primary-rgb), 0.6),
-            0 0 48px rgba(var(--primary-rgb), 0.4),
-            0 4px 16px rgba(var(--primary-rgb), 0.5);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
     .ai-toggle-btn span {
@@ -1531,9 +1595,7 @@ body.ai-panel-active::before {
 
     .ai-toggle-btn:hover {
         transform: translateY(-2px);
-        box-shadow: 0 0 32px rgba(var(--primary-rgb), 0.7),
-            0 0 64px rgba(var(--primary-rgb), 0.5),
-            0 6px 24px rgba(var(--primary-rgb), 0.6);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
     }
 
     /* Reorder header actions to put AI first */
