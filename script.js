@@ -164,8 +164,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- TRANSACTION HISTORY DATA (moved up for AI access) ---
-    const transactionData = [
+    // --- LOCAL STORAGE KEYS ---
+    const STORAGE_KEYS = {
+        balance: 'paynless_balance',
+        transactions: 'paynless_transactions',
+        conversationHistory: 'paynless_chat_history'
+    };
+
+    // --- DEFAULT TRANSACTION DATA ---
+    const defaultTransactions = [
         { name: 'Salary Deposit', date: 'Nov 25', amount: 85000, type: 'income', icon: 'ph-bank' },
         { name: 'Rent Payment', date: 'Nov 24', amount: -25000, type: 'expense', icon: 'ph-house' },
         { name: 'Freelance Project', date: 'Nov 23', amount: 15000, type: 'income', icon: 'ph-code' },
@@ -175,6 +182,30 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: 'Client Payment', date: 'Nov 19', amount: 12000, type: 'income', icon: 'ph-money' },
         { name: 'Electricity', date: 'Nov 18', amount: -890, type: 'expense', icon: 'ph-lightning' }
     ];
+
+    // --- LOAD FROM LOCAL STORAGE OR USE DEFAULTS ---
+    function loadFromStorage(key, defaultValue) {
+        try {
+            const stored = localStorage.getItem(key);
+            if (stored) {
+                return JSON.parse(stored);
+            }
+        } catch (e) {
+            console.error('Error loading from localStorage:', e);
+        }
+        return defaultValue;
+    }
+
+    function saveToStorage(key, value) {
+        try {
+            localStorage.setItem(key, JSON.stringify(value));
+        } catch (e) {
+            console.error('Error saving to localStorage:', e);
+        }
+    }
+
+    // --- TRANSACTION HISTORY DATA (loaded from storage or defaults) ---
+    const transactionData = loadFromStorage(STORAGE_KEYS.transactions, defaultTransactions);
 
     const transactionList = document.getElementById('transactionList');
 
@@ -229,14 +260,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const sendBtn = document.getElementById('sendBtn');
     const chatWindow = document.getElementById('chatWindow');
     
-    // Multi-turn conversation history
-    let conversationHistory = [];
+    // Multi-turn conversation history (loaded from storage)
+    let conversationHistory = loadFromStorage(STORAGE_KEYS.conversationHistory, []);
     
-    // Current wallet balance (synced with UI)
-    let currentBalance = 124592;
+    // Current wallet balance (loaded from storage or default)
+    let currentBalance = loadFromStorage(STORAGE_KEYS.balance, 124592);
     
     // Track if AI is currently processing
     let isProcessing = false;
+
+    // Initialize balance display from stored value
+    function initializeBalanceDisplay() {
+        const balanceElement = document.querySelector('.balance');
+        if (balanceElement) {
+            balanceElement.textContent = formatBalance(currentBalance);
+        }
+    }
 
     function formatBalance(amount) {
         return `₹${amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -285,6 +324,9 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => balanceElement.classList.remove('balance-updated'), 600);
         }
         
+        // Save to localStorage
+        saveToStorage(STORAGE_KEYS.balance, currentBalance);
+        
         // Recalculate earnings and spending from transactions
         updateWalletStats();
     }
@@ -319,6 +361,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Add to beginning of array (most recent first)
         transactionData.unshift(newTx);
         
+        // Save transactions to localStorage
+        saveToStorage(STORAGE_KEYS.transactions, transactionData);
+        
         // Update the balance (unless skip is specified, which happens when update_balance is also provided)
         if (!skipBalanceUpdate) {
             currentBalance += transaction.amount;
@@ -348,6 +393,9 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Remove the transaction
             transactionData.splice(index, 1);
+            
+            // Save transactions to localStorage
+            saveToStorage(STORAGE_KEYS.transactions, transactionData);
             
             // Re-render
             renderTransactions();
@@ -398,6 +446,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (conversationHistory.length > 40) {
                     conversationHistory = conversationHistory.slice(-40);
                 }
+                
+                // Save conversation history to localStorage
+                saveToStorage(STORAGE_KEYS.conversationHistory, conversationHistory);
                 
                 // Handle structured actions
                 // If both update_balance and add_transaction are provided, use update_balance as authoritative
@@ -677,4 +728,6 @@ document.addEventListener('DOMContentLoaded', () => {
     renderPortfolio('crypto');
     renderTransactions();
     renderSubscriptions();
+    initializeBalanceDisplay();
+    updateWalletStats();
 });
