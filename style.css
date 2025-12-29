@@ -1212,6 +1212,74 @@ body.ai-panel-active::before {
     background: var(--accent);
 }
 
+/* Image Upload Button */
+.image-input-hidden {
+    display: none;
+}
+
+.upload-btn {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    width: 40px;
+    height: 40px;
+    color: var(--text-main);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    border-radius: var(--radius-sm);
+}
+
+.upload-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.upload-btn.has-image {
+    background: var(--primary);
+    color: #000;
+    border-color: var(--primary);
+}
+
+.upload-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Image Preview in Chat */
+.message-image {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 0.5rem;
+    border: 1px solid var(--border-color);
+}
+
+.image-preview-container {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+}
+
+.image-preview-container .remove-image {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 24px;
+    height: 24px;
+    background: var(--negative);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
 /* SCROLLBAR */
 ::-webkit-scrollbar {
     width: 6px;
@@ -1246,25 +1314,30 @@ body.ai-panel-active::before {
 
 /* --- AI TOGGLE BUTTON --- */
 .ai-toggle-btn {
-    background: var(--bg-panel);
+    background: linear-gradient(135deg, var(--primary), var(--accent));
     border: var(--border-width) solid var(--border-color);
-    color: var(--text-main);
+    color: #000;
     padding: 0.5rem 1rem;
     border-radius: var(--radius-sm);
     font-family: var(--font-body);
-    font-weight: 600;
+    font-weight: 700;
     font-size: 0.875rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 0.5rem;
     transition: all 0.2s ease;
+    box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.4),
+        0 0 40px rgba(var(--primary-rgb), 0.2),
+        0 4px 12px rgba(var(--primary-rgb), 0.3);
 }
 
 .ai-toggle-btn:hover {
     border-color: var(--primary);
-    background: var(--bg-sidebar);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 0 28px rgba(var(--primary-rgb), 0.5),
+        0 0 56px rgba(var(--primary-rgb), 0.3),
+        0 6px 20px rgba(var(--primary-rgb), 0.4);
 }
 
 .ai-toggle-btn i {
@@ -1272,9 +1345,12 @@ body.ai-panel-active::before {
 }
 
 .ai-toggle-btn.is-active {
-    background: var(--primary);
-    border-color: var(--primary);
+    background: linear-gradient(135deg, var(--accent), var(--primary));
+    border-color: var(--accent);
     color: #000;
+    box-shadow: 0 0 24px rgba(var(--primary-rgb), 0.5),
+        0 0 48px rgba(var(--primary-rgb), 0.3),
+        0 4px 16px rgba(var(--primary-rgb), 0.4);
 }
 
 .ai-toggle-btn.is-active i {

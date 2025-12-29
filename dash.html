@@ -233,9 +233,9 @@
             </div>
         </main>
 
-        <!-- RIGHT SIDEBAR: AI CHAT WIP!!!-->
+        <!-- RIGHT SIDEBAR: AI CHAT -->
         <aside class="sidebar-right" id="aiPanel" aria-hidden="true" role="complementary"
-            aria-label="Finance AI Assistant">
+            aria-label="Paynless AI Assistant">
             <div class="chat-header">
                 <div class="chat-title">
                     <svg class="status-bot" width="48" height="48" viewBox="0 0 800 600"
@@ -259,7 +259,7 @@
                         <path d="M344 348 q56 36 112 0" fill="none" stroke="#1DB954" stroke-width="8"
                             stroke-linecap="round" />
                     </svg>
-                    <span>FINANCE AI</span>
+                    <span>PAYNLESS AI</span>
                 </div>
                 <button type="button" class="ai-close-btn" id="aiClose" aria-label="Close AI Assistant">
                     <i class="ph ph-x"></i>
@@ -272,6 +272,10 @@
                 </div>
             </div>
             <div class="chat-input-area">
+                <input type="file" id="imageInput" accept="image/*" class="image-input-hidden">
+                <button type="button" id="uploadBtn" class="upload-btn" title="Upload receipt or bill">
+                    <i class="ph ph-image"></i>
+                </button>
                 <input type="text" id="chatInput" placeholder="Ask anything...">
                 <button id="sendBtn"><i class="ph-fill ph-arrow-right"></i></button>
             </div>

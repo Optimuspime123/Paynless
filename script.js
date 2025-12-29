@@ -259,6 +259,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatInput = document.getElementById('chatInput');
     const sendBtn = document.getElementById('sendBtn');
     const chatWindow = document.getElementById('chatWindow');
+    const imageInput = document.getElementById('imageInput');
+    const uploadBtn = document.getElementById('uploadBtn');
     
     // Multi-turn conversation history (loaded from storage)
     let conversationHistory = loadFromStorage(STORAGE_KEYS.conversationHistory, []);
@@ -268,6 +270,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Track if AI is currently processing
     let isProcessing = false;
+    
+    // Track pending image for upload
+    let pendingImage = null;
 
     // Initialize balance display from stored value
     function initializeBalanceDisplay() {
@@ -276,12 +281,71 @@ document.addEventListener('DOMContentLoaded', () => {
             balanceElement.textContent = formatBalance(currentBalance);
         }
     }
+    
+    // Image upload handling
+    function handleImageSelect(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            addMessage('Please select a valid image file.', false);
+            return;
+        }
+        
+        // Validate file size (max 10MB)
+        if (file.size > 10 * 1024 * 1024) {
+            addMessage('Image is too large. Please select an image under 10MB.', false);
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            pendingImage = {
+                data: e.target.result.split(',')[1], // Base64 data without prefix
+                mimeType: file.type,
+                name: file.name
+            };
+            
+            // Update upload button to show image is attached
+            uploadBtn.classList.add('has-image');
+            uploadBtn.innerHTML = '<i class="ph ph-check"></i>';
+            uploadBtn.title = `Image attached: ${file.name}`;
+            
+            // Update placeholder to indicate image is attached
+            chatInput.placeholder = `Image attached: ${file.name.substring(0, 20)}...`;
+        };
+        reader.readAsDataURL(file);
+    }
+    
+    function clearPendingImage() {
+        pendingImage = null;
+        imageInput.value = '';
+        uploadBtn.classList.remove('has-image');
+        uploadBtn.innerHTML = '<i class="ph ph-image"></i>';
+        uploadBtn.title = 'Upload receipt or bill';
+        chatInput.placeholder = 'Ask anything...';
+    }
+    
+    // Setup image upload event listeners
+    if (uploadBtn && imageInput) {
+        uploadBtn.addEventListener('click', () => {
+            if (pendingImage) {
+                // If already has image, clear it
+                clearPendingImage();
+            } else {
+                imageInput.click();
+            }
+        });
+        
+        imageInput.addEventListener('change', handleImageSelect);
+    }
 
     function formatBalance(amount) {
         return `₹${amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     }
 
-    function addMessage(text, isUser = false, isTyping = false) {
+    function addMessage(text, isUser = false, isTyping = false, imageData = null) {
         const msgDiv = document.createElement('div');
         msgDiv.className = `message ${isUser ? 'user' : 'ai'}${isTyping ? ' typing' : ''}`;
 
@@ -296,7 +360,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
         } else {
+            let imageHtml = '';
+            if (imageData) {
+                imageHtml = `<img src="data:${imageData.mimeType};base64,${imageData.data}" alt="Uploaded image" class="message-image">`;
+            }
             msgDiv.innerHTML = `
+                ${imageHtml}
                 <p>${text}</p>
                 <span class="time">${time}</span>
             `;
@@ -402,29 +471,41 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function sendToAI(userMessage) {
+    async function sendToAI(userMessage, imageData = null) {
         if (isProcessing) return;
         
         isProcessing = true;
         sendBtn.disabled = true;
         chatInput.disabled = true;
+        if (uploadBtn) uploadBtn.disabled = true;
         
         // Add typing indicator
         addMessage('', false, true);
         
         try {
+            // Build request body
+            const requestBody = {
+                message: userMessage,
+                history: conversationHistory,
+                balance: currentBalance,
+                transactions: transactionData,
+                subscriptions: subscriptionsData,
+            };
+            
+            // Add image data if present
+            if (imageData) {
+                requestBody.image = {
+                    data: imageData.data,
+                    mimeType: imageData.mimeType
+                };
+            }
+            
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    message: userMessage,
-                    history: conversationHistory,
-                    balance: currentBalance,
-                    transactions: transactionData,
-                    subscriptions: subscriptionsData,
-                }),
+                body: JSON.stringify(requestBody),
             });
 
             const result = await response.json();
@@ -481,19 +562,32 @@ document.addEventListener('DOMContentLoaded', () => {
             isProcessing = false;
             sendBtn.disabled = false;
             chatInput.disabled = false;
+            if (uploadBtn) uploadBtn.disabled = false;
             chatInput.focus();
         }
     }
 
     function handleSend() {
         const text = chatInput.value.trim();
-        if (!text || isProcessing) return;
+        
+        // Allow sending with just an image (with default prompt)
+        if (!text && !pendingImage) return;
+        if (isProcessing) return;
+        
+        const messageText = text || 'Please analyze this image.';
+        const imageToSend = pendingImage;
 
-        addMessage(text, true);
+        // Add user message with image if present
+        addMessage(messageText, true, false, imageToSend);
         chatInput.value = '';
 
-        // Send to AI
-        sendToAI(text);
+        // Clear the pending image after sending
+        if (pendingImage) {
+            clearPendingImage();
+        }
+
+        // Send to AI with optional image
+        sendToAI(messageText, imageToSend);
     }
 
     sendBtn.addEventListener('click', handleSend);

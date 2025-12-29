@@ -81,7 +81,14 @@ RESPONSE GUIDELINES:
 - Use appropriate icons for transactions based on their category
 - Keep responses concise but informative
 - When adding an expense, make amount negative. When adding income, make amount positive.
-- If removing a transaction, also consider if balance should be updated accordingly`;
+- If removing a transaction, also consider if balance should be updated accordingly
+
+IMAGE ANALYSIS:
+- When the user uploads an image (receipt, bill, invoice, etc.), analyze it carefully
+- Extract relevant financial information like merchant name, amount, date, and items
+- Suggest adding it as a transaction if appropriate
+- Provide helpful insights about the expense/income shown in the image
+- Use appropriate icons based on the type of expense (e.g., ph-shopping-cart for retail, ph-hamburger for food, ph-car for transportation)`;
 }
 
 export default async function handler(req, res) {
@@ -97,7 +104,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { message, history, balance, transactions, subscriptions } = req.body;
+    const { message, history, balance, transactions, subscriptions, image } = req.body;
 
     if (!message) {
       res.status(400).json({ error: 'Message is required' });
@@ -122,10 +129,26 @@ export default async function handler(req, res) {
       }
     }
 
-    // Add the current user message
+    // Build the current message parts
+    const currentMessageParts = [];
+    
+    // Add image if present (for receipt/bill analysis)
+    if (image && image.data && image.mimeType) {
+      currentMessageParts.push({
+        inlineData: {
+          data: image.data,
+          mimeType: image.mimeType,
+        },
+      });
+    }
+    
+    // Add text message
+    currentMessageParts.push({ text: message });
+
+    // Add the current user message with all parts
     contents.push({
       role: 'user',
-      parts: [{ text: message }],
+      parts: currentMessageParts,
     });
 
     // Generate response using Gemini 3 Flash Preview with minimal thinking
