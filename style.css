@@ -612,6 +612,8 @@ body.ai-panel-active::before {
     gap: 1.5rem;
     overflow-x: auto;
     padding-bottom: 1rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
 }
 
 .deal-card {
@@ -835,7 +837,7 @@ body.ai-panel-active::before {
     display: grid;
     place-items: center;
     padding: 0;
-    width: 32px;
+    width: 40px;
     aspect-ratio: 1;
     background: rgba(var(--primary-rgb), 0.15);
     backdrop-filter: blur(8px);
@@ -1180,6 +1182,7 @@ body.ai-panel-active::before {
     display: flex;
     gap: 0.5rem;
     flex-shrink: 0;
+    background: var(--bg-sidebar);
 }
 
 #chatInput {
@@ -1190,6 +1193,9 @@ body.ai-panel-active::before {
     color: var(--text-main);
     font-family: var(--font-body);
     outline: none;
+    border-radius: var(--radius-sm);
+    font-size: 16px;
+    min-height: 44px;
 }
 
 #chatInput:focus {
@@ -1199,13 +1205,16 @@ body.ai-panel-active::before {
 #sendBtn {
     background: var(--primary);
     border: 1px solid var(--border-color);
-    width: 40px;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
     color: #000;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s;
+    border-radius: var(--radius-sm);
 }
 
 #sendBtn:hover {
@@ -1220,8 +1229,9 @@ body.ai-panel-active::before {
 .upload-btn {
     background: var(--bg-panel);
     border: 1px solid var(--border-color);
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
     color: var(--text-main);
     cursor: pointer;
     display: flex;
@@ -1455,6 +1465,7 @@ body.ai-panel-active::before {
         overflow-y: visible;
         max-height: none;
         order: 2;
+        height: auto;
     }
 
     .transaction-history {
@@ -1518,6 +1529,25 @@ body.ai-panel-active::before {
         max-width: 100%;
         z-index: 200;
         box-shadow: none;
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+    
+    .chat-input-area {
+        padding: 1rem;
+        padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    }
+    
+    /* Increase touch target sizes for mobile */
+    .upload-btn,
+    #sendBtn {
+        width: 44px;
+        height: 44px;
+    }
+    
+    /* Make subscription menu buttons larger for touch */
+    .subscription-card .menu-btn {
+        width: 40px;
+        height: 40px;
     }
 
     .app-container.ai-collapsed .sidebar-right {
@@ -1603,8 +1633,8 @@ body.ai-panel-active::before {
     }
 
     .theme-toggle {
-        width: 38px;
-        height: 38px;
+        width: 44px;
+        height: 44px;
     }
 
     .balance {

@@ -52,11 +52,11 @@ const responseSchema = {
 
 // Build system prompt with current financial context
 function buildSystemPrompt(balance, transactions, subscriptions) {
-  const transactionSummary = transactions.map((tx, idx) => 
+  const transactionSummary = transactions.map((tx, idx) =>
     `${idx}. ${tx.name} (${tx.date}): ₹${tx.amount > 0 ? '+' : ''}${tx.amount.toLocaleString('en-IN')}`
   ).join('\n');
-  
-  const subscriptionSummary = subscriptions.map(sub => 
+
+  const subscriptionSummary = subscriptions.map(sub =>
     `- ${sub.name}: ${sub.price}/mo [${sub.status}]`
   ).join('\n');
 
@@ -118,7 +118,7 @@ export default async function handler(req, res) {
 
     // Build conversation history for multi-turn context
     const contents = [];
-    
+
     // Add previous conversation turns if available
     if (history && Array.isArray(history)) {
       for (const turn of history) {
@@ -131,7 +131,7 @@ export default async function handler(req, res) {
 
     // Build the current message parts
     const currentMessageParts = [];
-    
+
     // Add image if present (for receipt/bill analysis)
     if (image && image.data && image.mimeType) {
       currentMessageParts.push({
@@ -141,7 +141,7 @@ export default async function handler(req, res) {
         },
       });
     }
-    
+
     // Add text message
     currentMessageParts.push({ text: message });
 
@@ -172,7 +172,7 @@ export default async function handler(req, res) {
     // Parse the structured response
     const responseText = response.text;
     let parsedResponse;
-    
+
     try {
       parsedResponse = JSON.parse(responseText);
     } catch (parseError) {
@@ -198,16 +198,16 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error('Chat API Error:', error);
-    
+
     // Handle specific API errors
     const errorMessage = error.message || 'An unexpected error occurred';
     const statusCode = error.status || 500;
-    
+
     res.status(statusCode).json({
       success: false,
       error: errorMessage,
       data: {
-        response: 'Sorry, I\'m having trouble connecting right now. Please try again in a moment.',
+        response: `Sorry, I\'m having trouble connecting right now. Please try again in a moment. (Error code: ${statusCode})`,
         update_balance: null,
         add_transaction: null,
         remove_transaction: null,
