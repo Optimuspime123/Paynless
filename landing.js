@@ -158,4 +158,43 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(() => {
         if (Math.random() > 0.85) triggerGlitch();
     }, 4000);
+    // --- FAQ OVERLAY ---
+    const faqBtn = document.getElementById('faqBtn');
+    const faqOverlay = document.getElementById('faqOverlay');
+    const faqClose = document.getElementById('faqClose');
+
+    function closeFaqOverlay() {
+        faqOverlay.classList.add('closing');
+        faqOverlay.addEventListener('animationend', function handler() {
+            faqOverlay.classList.remove('active', 'closing');
+            document.body.style.overflow = '';
+            faqOverlay.removeEventListener('animationend', handler);
+        });
+    }
+
+    if (faqBtn && faqOverlay) {
+        faqBtn.addEventListener('click', () => {
+            faqOverlay.classList.remove('closing');
+            faqOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        if (faqClose) {
+            faqClose.addEventListener('click', closeFaqOverlay);
+        }
+
+        // Close on clicking outside content
+        faqOverlay.addEventListener('click', (e) => {
+            if (e.target === faqOverlay) {
+                closeFaqOverlay();
+            }
+        });
+
+        // Close on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && faqOverlay.classList.contains('active') && !faqOverlay.classList.contains('closing')) {
+                closeFaqOverlay();
+            }
+        });
+    }
 });
