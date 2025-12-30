@@ -143,7 +143,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 price: '$145.20',
                 change: '-5.2%',
                 isPos: false,
-                icon: 'ph-planet',
+                iconSvg: `
+                    <svg viewBox="0 0 256 256" aria-hidden="true" focusable="false">
+                        <defs>
+                            <linearGradient id="solanaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#00ffa3" />
+                                <stop offset="100%" stop-color="#dc1fff" />
+                            </linearGradient>
+                        </defs>
+                        <g fill="url(#solanaGrad)">
+                            <path d="M44 54c4-4 9-6 14-6h144c3 0 4 4 2 6l-20 20c-4 4-9 6-14 6H26c-3 0-4-4-2-6l20-20z"/>
+                            <path d="M212 112c4-4 2-10-3-10H65c-5 0-10 2-14 6l-20 20c-4 4-2 10 3 10h144c5 0 10-2 14-6l20-20z"/>
+                            <path d="M44 170c4-4 9-6 14-6h144c3 0 4 4 2 6l-20 20c-4 4-9 6-14 6H26c-3 0-4-4-2-6l20-20z"/>
+                        </g>
+                    </svg>
+                `,
                 color: '#ff4d00',
                 currency: 'USD',
                 series: {
@@ -190,7 +204,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 price: '$485.90',
                 change: '+3.1%',
                 isPos: true,
-                icon: 'ph-cpu',
+                iconSvg: `
+                    <svg viewBox="0 0 256 256" aria-hidden="true" focusable="false">
+                        <g fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M40 128c40-60 120-60 160 0-40 60-120 60-160 0z"/>
+                            <circle cx="128" cy="128" r="28" fill="currentColor"/>
+                        </g>
+                    </svg>
+                `,
                 color: '#ccff00',
                 currency: 'USD',
                 series: {
@@ -281,9 +302,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             row.style.setProperty('--chart-color', item.color);
 
+            const iconMarkup = item.iconSvg
+                ? item.iconSvg
+                : `<i class="ph-fill ${item.icon}"></i>`;
+
             row.innerHTML = `
                 <div class="asset-info">
-                    <div class="asset-icon"><i class="ph-fill ${item.icon}"></i></div>
+                    <div class="asset-icon">${iconMarkup}</div>
                     <div>
                         <div class="asset-name">${item.name}</div>
                         <div class="asset-sub">${item.sub}</div>

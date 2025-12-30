@@ -851,6 +851,13 @@ body.ai-panel-active::before {
     align-items: center;
     justify-content: center;
     font-size: 1.2rem;
+    color: var(--text-main);
+}
+
+.asset-icon svg {
+    width: 26px;
+    height: 26px;
+    display: block;
 }
 
 .asset-name {
