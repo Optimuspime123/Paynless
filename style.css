@@ -44,6 +44,130 @@
     --accent: #ff4d00;
 }
 
+/* === SMOOTH THEME TRANSITIONS === */
+/* Global theme transition for all elements using CSS variables */
+*,
+*::before,
+*::after {
+    transition-property: background-color, border-color, color, fill, stroke, box-shadow, outline-color;
+    transition-duration: 0.35s;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Exclude elements that have their own specific animations */
+.page-transition,
+.page-transition *,
+.cta-button,
+.cta-glitch-layers,
+.glitch-layer,
+.matrix-drop,
+.typing-indicator span,
+.carousel-word,
+[class*="glitch"],
+.transition-glitch,
+.transition-grid {
+    transition-property: none;
+}
+
+/* Ensure smooth transitions on key layout elements */
+.sidebar-left,
+.sidebar-right,
+.main-content,
+.top-bar,
+.content-grid,
+.wallet-card,
+.transaction-item,
+.subscription-card,
+.deal-card,
+.asset-row,
+.chat-window,
+.message,
+.quick-actions,
+.action-chip,
+.toast,
+.faq-overlay,
+.faq-content {
+    transition: background-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Smooth icon color transitions */
+.ph,
+.ph-fill,
+[class^="ph-"] {
+    transition: color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Scrollbar theme transition */
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-thumb {
+    transition: background-color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Landing page specific smooth transitions */
+.landing-body,
+.landing-container,
+.hero-section,
+.landing-nav {
+    transition: background-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Floating shapes smooth transition */
+.floating-shape {
+    transition: background 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Matrix background opacity transition */
+.matrix-bg {
+    transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Text shadow transitions for hero elements */
+.hero-title,
+.carousel-word,
+.static-text {
+    transition: color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        text-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Button theme transitions - REMOVED transform to preserve custom bouncy hover effects */
+.cta-button,
+.faq-btn,
+.ai-toggle-btn,
+.theme-toggle,
+.link-btn,
+.toggle-btn,
+.menu-btn,
+.icon-btn {
+    transition: background-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Input fields theme transition */
+#chatInput,
+input,
+textarea {
+    transition: background-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Badge theme transitions */
+.demo-badge,
+.beta-badge,
+.deal-tag,
+.subscription-status {
+    transition: background-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 /* --- RESET & BASE --- */
 * {
     margin: 0;
