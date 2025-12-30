@@ -107,16 +107,199 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const portfolioData = {
         crypto: [
-            { name: 'Bitcoin', sub: 'BTC', price: '$94,230.50', change: '+2.4%', isPos: true, icon: 'ph-currency-btc', color: '#ccff00' },
-            { name: 'Ethereum', sub: 'ETH', price: '$4,120.10', change: '+1.8%', isPos: true, icon: 'ph-currency-eth', color: '#ccff00' },
-            { name: 'Solana', sub: 'SOL', price: '$145.20', change: '-5.2%', isPos: false, icon: 'ph-currency-solana', color: '#ff4d00' }
+            {
+                name: 'Bitcoin',
+                sub: 'BTC',
+                price: '$94,230.50',
+                change: '+2.4%',
+                isPos: true,
+                icon: 'ph-currency-btc',
+                series: {
+                    day: [94.1, 94.4, 94.2, 94.7, 94.5, 94.9, 94.6, 94.8, 95.1, 94.9, 95.3, 95.1],
+                    week: [92.8, 93.2, 92.9, 93.6, 93.1, 93.9, 94.3, 94.0, 94.4, 94.8, 94.2, 94.7, 95.0, 94.6, 94.9, 95.3, 95.1, 95.4],
+                    month: [88.2, 89.1, 90.4, 89.9, 90.8, 91.5, 92.3, 91.7, 92.9, 92.1, 93.4, 94.0, 93.6, 94.2, 93.8, 94.6, 95.1, 94.8, 95.4, 94.9, 95.6, 95.2, 95.9, 95.4, 96.2, 95.7, 96.4, 96.0]
+                },
+                stats: {
+                    allocation: '32%',
+                    cap: '$1.82T',
+                    volume: '$28.4B',
+                    momentum: 'Strong'
+                }
+            },
+            {
+                name: 'Ethereum',
+                sub: 'ETH',
+                price: '$4,120.10',
+                change: '+1.8%',
+                isPos: true,
+                icon: 'ph-currency-eth',
+                series: {
+                    day: [4.04, 4.06, 4.03, 4.07, 4.08, 4.11, 4.09, 4.12, 4.1, 4.14, 4.12, 4.13],
+                    week: [3.92, 3.98, 3.95, 4.02, 3.99, 4.05, 4.09, 4.03, 4.1, 4.12, 4.08, 4.15, 4.11, 4.18, 4.14, 4.2, 4.17, 4.22],
+                    month: [3.58, 3.64, 3.7, 3.66, 3.74, 3.8, 3.76, 3.84, 3.9, 3.86, 3.94, 4.0, 3.96, 4.04, 4.1, 4.06, 4.14, 4.2, 4.16, 4.24, 4.28, 4.22, 4.3, 4.26, 4.34, 4.3, 4.38, 4.33]
+                },
+                stats: {
+                    allocation: '21%',
+                    cap: '$495B',
+                    volume: '$12.1B',
+                    momentum: 'Building'
+                }
+            },
+            {
+                name: 'Solana',
+                sub: 'SOL',
+                price: '₹145.20',
+                change: '-5.2%',
+                isPos: false,
+                icon: 'ph-currency-solana',
+                series: {
+                    day: [152, 151, 149, 150, 148, 147, 146, 145, 146, 144, 145, 143],
+                    week: [168, 165, 163, 160, 158, 156, 154, 153, 151, 149, 147, 146, 148, 145, 144, 142, 143, 141],
+                    month: [182, 178, 175, 172, 170, 168, 165, 163, 161, 158, 156, 154, 152, 150, 148, 147, 145, 143, 142, 140, 139, 138, 137, 136, 135, 134, 133, 132]
+                },
+                stats: {
+                    allocation: '11%',
+                    cap: '$62B',
+                    volume: '$4.9B',
+                    momentum: 'Cooling'
+                }
+            }
         ],
         fiat: [
-            { name: 'Apple Inc.', sub: 'AAPL', price: '$182.50', change: '+0.5%', isPos: true, icon: 'ph-apple-logo', color: '#ccff00' },
-            { name: 'Tesla', sub: 'TSLA', price: '$240.10', change: '-1.2%', isPos: false, icon: 'ph-car', color: '#ff4d00' },
-            { name: 'NVIDIA', sub: 'NVDA', price: '$485.90', change: '+3.1%', isPos: true, icon: 'ph-chip', color: '#ccff00' }
+            {
+                name: 'Apple Inc.',
+                sub: 'AAPL',
+                price: '$182.50',
+                change: '+0.5%',
+                isPos: true,
+                icon: 'ph-apple-logo',
+                series: {
+                    day: [181.2, 181.6, 181.4, 181.9, 182.1, 182.4, 182.2, 182.6, 182.3, 182.7, 182.4, 182.5],
+                    week: [176.8, 177.4, 177.1, 178.2, 178.9, 179.4, 180.1, 179.7, 180.6, 181.2, 180.8, 181.6, 182.0, 181.5, 182.3, 182.8, 182.4, 183.0],
+                    month: [168.4, 169.2, 170.1, 169.7, 170.8, 171.6, 172.4, 172.0, 173.1, 173.8, 174.6, 175.2, 176.0, 176.8, 177.4, 178.2, 178.9, 179.6, 180.3, 179.9, 181.0, 180.6, 181.4, 182.1, 182.6, 183.3, 182.9, 183.6]
+                },
+                stats: {
+                    allocation: '18%',
+                    cap: '$2.9T',
+                    volume: '$7.2B',
+                    momentum: 'Stable'
+                }
+            },
+            {
+                name: 'Tesla',
+                sub: 'TSLA',
+                price: '$240.10',
+                change: '-1.2%',
+                isPos: false,
+                icon: 'ph-car',
+                series: {
+                    day: [248.2, 247.6, 246.8, 246.1, 245.4, 244.6, 244.0, 243.2, 242.6, 241.8, 241.0, 240.1],
+                    week: [265.4, 262.7, 260.2, 258.8, 256.1, 254.6, 252.9, 250.7, 248.4, 246.2, 245.0, 243.6, 242.4, 241.2, 240.6, 239.8, 239.2, 238.7],
+                    month: [284.1, 281.6, 278.4, 276.9, 274.2, 271.8, 269.5, 266.9, 264.3, 262.1, 259.4, 257.6, 255.1, 252.7, 250.4, 248.9, 246.6, 244.8, 243.1, 241.6, 240.5, 239.2, 238.0, 236.8, 235.4, 234.1, 232.8, 231.5]
+                },
+                stats: {
+                    allocation: '9%',
+                    cap: '$760B',
+                    volume: '$9.4B',
+                    momentum: 'Volatile'
+                }
+            },
+            {
+                name: 'NVIDIA',
+                sub: 'NVDA',
+                price: '$485.90',
+                change: '+3.1%',
+                isPos: true,
+                icon: 'ph-chip',
+                series: {
+                    day: [472.6, 474.1, 476.2, 478.0, 479.6, 481.3, 483.4, 485.2, 484.8, 486.1, 487.3, 485.9],
+                    week: [448.2, 452.4, 456.8, 459.6, 463.2, 466.9, 470.4, 468.3, 472.6, 475.1, 478.4, 481.8, 483.2, 486.0, 488.6, 490.2, 492.4, 494.0],
+                    month: [412.3, 418.8, 424.6, 421.4, 430.2, 436.8, 442.5, 438.7, 447.3, 453.8, 459.9, 466.4, 470.2, 476.8, 482.4, 487.6, 492.8, 498.2, 494.7, 501.4, 507.8, 512.1, 518.6, 523.4, 529.8, 534.2, 540.6, 546.0]
+                },
+                stats: {
+                    allocation: '14%',
+                    cap: '$1.2T',
+                    volume: '$11.6B',
+                    momentum: 'Hot'
+                }
+            }
         ]
     };
+
+    const chartRanges = [
+        { key: 'day', label: '1D' },
+        { key: 'week', label: '1W' },
+        { key: 'month', label: '1M' }
+    ];
+
+    const chartSizing = {
+        spark: { width: 180, height: 56, padding: 8 },
+        expanded: { width: 360, height: 150, padding: 18 }
+    };
+
+    function buildChartSvg({ id, data, width, height, padding, color, showGrid = false }) {
+        const min = Math.min(...data);
+        const max = Math.max(...data);
+        const range = max - min || 1;
+        const step = (width - padding * 2) / (data.length - 1);
+        const baseY = height - padding;
+
+        const points = data.map((value, index) => {
+            const x = padding + step * index;
+            const y = padding + (height - padding * 2) * (1 - (value - min) / range);
+            return { x, y };
+        });
+
+        const linePath = points
+            .map((point, index) => `${index === 0 ? 'M' : 'L'}${point.x.toFixed(1)},${point.y.toFixed(1)}`)
+            .join(' ');
+
+        const areaPath = `${linePath} L ${points[points.length - 1].x.toFixed(1)},${baseY.toFixed(1)} L ${points[0].x.toFixed(1)},${baseY.toFixed(1)} Z`;
+
+        const peakIndex = data.indexOf(max);
+        const lowIndex = data.indexOf(min);
+        const peakPoint = points[peakIndex];
+        const lowPoint = points[lowIndex];
+        const lastPoint = points[points.length - 1];
+
+        const gridLines = showGrid
+            ? `
+                <g class="graph-grid">
+                    ${Array.from({ length: 4 }).map((_, index) => {
+                        const y = padding + ((height - padding * 2) / 4) * (index + 1);
+                        return `<line x1="${padding}" y1="${y.toFixed(1)}" x2="${width - padding}" y2="${y.toFixed(1)}" />`;
+                    }).join('')}
+                    ${Array.from({ length: 5 }).map((_, index) => {
+                        const x = padding + ((width - padding * 2) / 5) * (index + 1);
+                        return `<line x1="${x.toFixed(1)}" y1="${padding}" x2="${x.toFixed(1)}" y2="${height - padding}" />`;
+                    }).join('')}
+                </g>`
+            : '';
+
+        return `
+            <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <defs>
+                    <linearGradient id="${id}-fill" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="${color}" stop-opacity="0.45" />
+                        <stop offset="100%" stop-color="${color}" stop-opacity="0" />
+                    </linearGradient>
+                    <filter id="${id}-glow" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+                        <feMerge>
+                            <feMergeNode in="coloredBlur" />
+                            <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                    </filter>
+                </defs>
+                ${gridLines}
+                <path class="graph-area" d="${areaPath}" fill="url(#${id}-fill)" />
+                <path class="graph-line" d="${linePath}" stroke="${color}" filter="url(#${id}-glow)" />
+                <circle class="graph-dot peak" cx="${peakPoint.x.toFixed(1)}" cy="${peakPoint.y.toFixed(1)}" r="3" stroke="${color}" />
+                <circle class="graph-dot" cx="${lowPoint.x.toFixed(1)}" cy="${lowPoint.y.toFixed(1)}" r="2.5" stroke="${color}" />
+                <circle class="graph-dot" cx="${lastPoint.x.toFixed(1)}" cy="${lastPoint.y.toFixed(1)}" r="3.5" stroke="${color}" />
+            </svg>
+        `;
+    }
 
     toggleBtns.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -134,35 +317,101 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = portfolioData[type];
         portfolioList.innerHTML = '';
 
-        data.forEach(item => {
+        data.forEach((item, index) => {
             const row = document.createElement('div');
             row.className = 'asset-row';
 
-            // Simple SVG graph path generation based on positive/negative
             const graphColor = item.isPos ? 'var(--primary)' : 'var(--negative)';
-            const graphPath = item.isPos
-                ? 'M0,25 Q25,25 50,10 T100,5' // Upward trend
-                : 'M0,10 Q25,25 50,15 T100,28'; // Downward trend
+            const rowId = `${type}-${index}`;
+            const defaultRange = 'week';
+            const sparkline = buildChartSvg({
+                id: `spark-${rowId}`,
+                data: item.series[defaultRange],
+                color: graphColor,
+                ...chartSizing.spark
+            });
+            const expandedChart = buildChartSvg({
+                id: `expand-${rowId}-${defaultRange}`,
+                data: item.series[defaultRange],
+                color: graphColor,
+                showGrid: true,
+                ...chartSizing.expanded
+            });
+            const expandId = `asset-expand-${rowId}`;
 
             row.innerHTML = `
                 <div class="asset-info">
-                    <div class="asset-icon"><i class="ph-fill ${item.icon}"></i></div>
-                    <div>
-                        <div class="asset-name">${item.name}</div>
-                        <div class="asset-sub">${item.sub}</div>
+                    <div class="asset-main">
+                        <div class="asset-icon"><i class="ph-fill ${item.icon}"></i></div>
+                        <div class="asset-meta">
+                            <div class="asset-name">${item.name}</div>
+                            <div class="asset-sub">${item.sub}</div>
+                        </div>
+                    </div>
+                    <div class="asset-actions">
+                        <button class="expand-btn" type="button" aria-expanded="false" aria-controls="${expandId}">
+                            Details <i class="ph ph-caret-down"></i>
+                        </button>
                     </div>
                 </div>
                 <div class="asset-graph">
-                    <svg width="100" height="30" viewBox="0 0 100 30">
-                        <path d="${graphPath}" fill="none" stroke="${graphColor}" stroke-width="2"/>
-                    </svg>
+                    ${sparkline}
                 </div>
                 <div class="asset-values">
                     <div class="asset-price font-mono">${item.price}</div>
                     <div class="asset-change ${item.isPos ? 'positive' : 'negative'} font-mono">${item.change}</div>
                 </div>
+                <div class="asset-expand" id="${expandId}" aria-hidden="true">
+                    <div class="asset-expand-header">
+                        <div class="asset-expand-title">Market Pulse</div>
+                        <div class="asset-range">
+                            ${chartRanges.map(range => `
+                                <button type="button" data-range="${range.key}" class="${range.key === defaultRange ? 'active' : ''}">
+                                    ${range.label}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="asset-chart">
+                        ${expandedChart}
+                    </div>
+                    <div class="asset-expand-footer">
+                        <div><strong>${item.stats.allocation}</strong>Allocation</div>
+                        <div><strong>${item.stats.cap}</strong>Market Cap</div>
+                        <div><strong>${item.stats.volume}</strong>24h Volume</div>
+                        <div><strong>${item.stats.momentum}</strong>Momentum</div>
+                    </div>
+                </div>
             `;
             portfolioList.appendChild(row);
+
+            const expandBtn = row.querySelector('.expand-btn');
+            const expandPanel = row.querySelector('.asset-expand');
+            const rangeButtons = row.querySelectorAll('.asset-range button');
+            const chartContainer = row.querySelector('.asset-chart');
+
+            if (expandBtn && expandPanel) {
+                expandBtn.addEventListener('click', () => {
+                    const isExpanded = row.classList.toggle('expanded');
+                    expandBtn.setAttribute('aria-expanded', isExpanded);
+                    expandPanel.setAttribute('aria-hidden', !isExpanded);
+                });
+            }
+
+            rangeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    rangeButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    const range = button.dataset.range;
+                    chartContainer.innerHTML = buildChartSvg({
+                        id: `expand-${rowId}-${range}`,
+                        data: item.series[range],
+                        color: graphColor,
+                        showGrid: true,
+                        ...chartSizing.expanded
+                    });
+                });
+            });
         });
     }
 

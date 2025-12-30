@@ -817,17 +817,21 @@ body.ai-panel-active::before {
 
 .asset-row {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: minmax(200px, 2fr) minmax(160px, 1.5fr) minmax(140px, 1fr);
     align-items: center;
     background: var(--bg-panel);
     border: 1px solid var(--border-color);
     padding: 1rem;
     border-radius: var(--radius-sm);
-    transition: background 0.2s;
+    gap: 1rem;
+    transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+    position: relative;
 }
 
 .asset-row:hover {
     background: var(--bg-sidebar);
+    box-shadow: 6px 6px 0 var(--border-color);
+    transform: translateY(-2px);
 }
 
 .asset-info {
@@ -848,6 +852,51 @@ body.ai-panel-active::before {
     font-size: 1.2rem;
 }
 
+.asset-main {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.asset-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.asset-actions {
+    margin-left: auto;
+}
+
+.expand-btn {
+    border: 1px solid var(--border-color);
+    background: var(--bg-body);
+    color: var(--text-main);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    padding: 0.35rem 0.6rem;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    cursor: pointer;
+}
+
+.expand-btn i {
+    font-size: 0.9rem;
+    transition: transform 0.2s ease;
+}
+
+.asset-row.expanded .expand-btn {
+    background: var(--text-main);
+    color: var(--bg-panel);
+}
+
+.asset-row.expanded .expand-btn i {
+    transform: rotate(180deg);
+}
+
 .asset-name {
     font-weight: 700;
 }
@@ -855,6 +904,43 @@ body.ai-panel-active::before {
 .asset-sub {
     font-size: 0.8rem;
     color: var(--text-muted);
+}
+
+.asset-graph {
+    position: relative;
+    min-height: 48px;
+}
+
+.asset-graph svg {
+    width: 100%;
+    height: 52px;
+    display: block;
+}
+
+.graph-grid line {
+    stroke: var(--border-color);
+    opacity: 0.2;
+    stroke-dasharray: 4 6;
+}
+
+.graph-line {
+    fill: none;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.graph-area {
+    opacity: 0.35;
+}
+
+.graph-dot {
+    fill: var(--bg-panel);
+    stroke-width: 2;
+}
+
+.graph-dot.peak {
+    fill: var(--accent);
 }
 
 .asset-values {
@@ -871,6 +957,87 @@ body.ai-panel-active::before {
 
 .asset-change.negative {
     color: var(--negative);
+}
+
+.asset-expand {
+    grid-column: 1 / -1;
+    border: 1px solid var(--border-color);
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.3), transparent);
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease, transform 0.3s ease, margin-top 0.3s ease;
+}
+
+.asset-row.expanded .asset-expand {
+    max-height: 360px;
+    opacity: 1;
+    margin-top: 0.5rem;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.asset-expand-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.asset-expand-title {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+.asset-range {
+    display: inline-flex;
+    gap: 0.4rem;
+}
+
+.asset-range button {
+    border: 1px solid var(--border-color);
+    background: transparent;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    padding: 0.3rem 0.55rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.asset-range button.active {
+    background: var(--text-main);
+    color: var(--bg-panel);
+}
+
+.asset-chart svg {
+    width: 100%;
+    height: 150px;
+    display: block;
+}
+
+.asset-expand-footer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.75rem;
+    margin-top: 0.85rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.asset-expand-footer strong {
+    display: block;
+    color: var(--text-main);
+    font-size: 0.85rem;
 }
 
 /* SUBSCRIPTIONS SECTION */
@@ -1801,11 +1968,19 @@ body.ai-panel-active::before {
     }
 
     .asset-row {
-        grid-template-columns: 2fr 1fr;
+        grid-template-columns: 1fr;
     }
 
     .asset-graph {
-        display: none;
+        width: 100%;
+    }
+
+    .asset-values {
+        text-align: left;
+    }
+
+    .asset-actions {
+        margin-left: 0;
     }
 
     .subscriptions-grid {
