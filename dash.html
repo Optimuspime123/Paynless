@@ -290,6 +290,11 @@
                     <span class="time">Now</span>
                 </div>
             </div>
+            <div class="quick-actions" id="quickActions">
+                <button class="action-chip" data-prompt="Analyze my recent spending">Analyze Spending</button>
+                <button class="action-chip" data-prompt="I spent ₹500 on Food">Add Expense</button>
+                <button class="action-chip" data-prompt="What are my subscriptions?">Subscriptions</button>
+            </div>
             <div class="chat-input-area">
                 <input type="file" id="imageInput" accept="image/*" class="image-input-hidden">
                 <button type="button" id="uploadBtn" class="upload-btn" title="Upload receipt or bill">
@@ -308,6 +313,7 @@
         </filter>
     </svg>
 
+    <div class="toast-container" id="toastContainer"></div>
     <script src="script.js"></script>
 </body>
 

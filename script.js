@@ -274,6 +274,37 @@ document.addEventListener('DOMContentLoaded', () => {
     // Track pending image for upload
     let pendingImage = null;
 
+    // --- TOAST NOTIFICATIONS ---
+    function showToast(title, message, type = 'info') {
+        const container = document.getElementById('toastContainer');
+        if (!container) return;
+
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        
+        let iconClass = 'ph-info';
+        if (type === 'success') iconClass = 'ph-check-circle';
+        if (type === 'error') iconClass = 'ph-warning-circle';
+
+        toast.innerHTML = `
+            <div class="toast-icon"><i class="ph ${iconClass}"></i></div>
+            <div class="toast-content">
+                <div class="toast-title">${title}</div>
+                <div class="toast-message">${message}</div>
+            </div>
+        `;
+
+        container.appendChild(toast);
+
+        // Remove after 3 seconds
+        setTimeout(() => {
+            toast.classList.add('hiding');
+            toast.addEventListener('animationend', () => {
+                toast.remove();
+            });
+        }, 3000);
+    }
+
     // Initialize balance display from stored value
     function initializeBalanceDisplay() {
         const balanceElement = document.querySelector('.balance');
@@ -289,12 +320,14 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Validate file type
         if (!file.type.startsWith('image/')) {
+            showToast('Invalid File', 'Please select a valid image file.', 'error');
             addMessage('Please select a valid image file.', false);
             return;
         }
         
         // Validate file size (max 10MB)
         if (file.size > 10 * 1024 * 1024) {
+            showToast('File Too Large', 'Please select an image under 10MB.', 'error');
             addMessage('Image is too large. Please select an image under 10MB.', false);
             return;
         }
@@ -314,6 +347,8 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Update placeholder to indicate image is attached
             chatInput.placeholder = `Image attached: ${file.name.substring(0, 20)}...`;
+            
+            showToast('Image Attached', file.name, 'success');
         };
         reader.readAsDataURL(file);
     }
@@ -450,6 +485,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => firstItem.classList.remove('transaction-new'), 1000);
             }
         }, 50);
+
+        // Show toast
+        showToast('Transaction Added', `${transaction.name}: ${formatBalance(transaction.amount)}`, 'success');
     }
 
     function removeTransactionFromData(index) {
@@ -468,6 +506,8 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Re-render
             renderTransactions();
+
+            showToast('Transaction Removed', `${removedTx.name} has been deleted`, 'info');
         }
     }
 
@@ -537,6 +577,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 if (hasExplicitBalanceUpdate) {
                     updateBalanceUI(data.update_balance);
+                    showToast('Balance Updated', `New balance: ${formatBalance(data.update_balance)}`, 'success');
                 }
                 
                 if (data.add_transaction) {
@@ -552,12 +593,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Handle error response
                 const errorMsg = result.data?.response || result.error || 'Something went wrong. Please try again.';
                 addMessage(errorMsg, false);
+                showToast('Error', 'Failed to get a response from AI', 'error');
             }
             
         } catch (error) {
             console.error('Chat error:', error);
             removeTypingIndicator();
             addMessage('I\'m having trouble connecting right now. Please check your connection and try again.', false);
+            showToast('Connection Error', 'Could not connect to the server', 'error');
         } finally {
             isProcessing = false;
             sendBtn.disabled = false;
@@ -597,6 +640,20 @@ document.addEventListener('DOMContentLoaded', () => {
             handleSend();
         }
     });
+
+    // --- QUICK ACTIONS ---
+    const quickActions = document.getElementById('quickActions');
+    if (quickActions) {
+        quickActions.addEventListener('click', (e) => {
+            if (e.target.classList.contains('action-chip')) {
+                const prompt = e.target.getAttribute('data-prompt');
+                chatInput.value = prompt;
+                // Optional: Automatically send or just populate
+                // handleSend(); 
+                chatInput.focus();
+            }
+        });
+    }
 
     // --- TRANSACTION HISTORY RENDERING ---
     function renderTransactions() {
