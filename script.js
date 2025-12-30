@@ -107,15 +107,149 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const portfolioData = {
         crypto: [
-            { name: 'Bitcoin', sub: 'BTC', price: '$94,230.50', change: '+2.4%', isPos: true, icon: 'ph-currency-btc', color: '#ccff00' },
-            { name: 'Ethereum', sub: 'ETH', price: '$4,120.10', change: '+1.8%', isPos: true, icon: 'ph-currency-eth', color: '#ccff00' },
-            { name: 'Solana', sub: 'SOL', price: '$145.20', change: '-5.2%', isPos: false, icon: 'ph-currency-solana', color: '#ff4d00' }
+            {
+                name: 'Bitcoin',
+                sub: 'BTC',
+                price: '$94,230.50',
+                change: '+2.4%',
+                isPos: true,
+                icon: 'ph-currency-btc',
+                color: '#ccff00',
+                currency: 'USD',
+                series: {
+                    week: [91800, 92350, 91750, 93100, 94200, 93950, 94800, 95250],
+                    month: [90200, 91400, 89900, 92750, 93200, 91850, 93500, 94750, 93600, 95400, 96250, 95250],
+                    year: [61200, 64800, 62500, 70150, 68600, 74300, 78200, 75900, 82500, 84200, 88100, 91400, 89900, 92750, 96250, 94400, 97100, 95250]
+                }
+            },
+            {
+                name: 'Ethereum',
+                sub: 'ETH',
+                price: '$4,120.10',
+                change: '+1.8%',
+                isPos: true,
+                icon: 'ph-currency-eth',
+                color: '#ccff00',
+                currency: 'USD',
+                series: {
+                    week: [3950, 4010, 3980, 4085, 4140, 4115, 4180, 4220],
+                    month: [3720, 3860, 3810, 3925, 4010, 3975, 4050, 4160, 4090, 4210, 4280, 4220],
+                    year: [2150, 2380, 2210, 2650, 2890, 3050, 3340, 3180, 3510, 3720, 3860, 3810, 4020, 4160, 4280, 4120, 4350, 4220]
+                }
+            },
+            {
+                name: 'Solana',
+                sub: 'SOL',
+                price: '$145.20',
+                change: '-5.2%',
+                isPos: false,
+                icon: 'ph-currency-solana',
+                color: '#ff4d00',
+                currency: 'USD',
+                series: {
+                    week: [162, 158, 155, 149, 152, 147, 144, 145],
+                    month: [176, 168, 171, 165, 158, 154, 150, 155, 149, 147, 143, 145],
+                    year: [98, 112, 106, 124, 136, 151, 172, 165, 158, 170, 176, 168, 160, 154, 149, 147, 142, 145]
+                }
+            }
         ],
         fiat: [
-            { name: 'Apple Inc.', sub: 'AAPL', price: '$182.50', change: '+0.5%', isPos: true, icon: 'ph-apple-logo', color: '#ccff00' },
-            { name: 'Tesla', sub: 'TSLA', price: '$240.10', change: '-1.2%', isPos: false, icon: 'ph-car', color: '#ff4d00' },
-            { name: 'NVIDIA', sub: 'NVDA', price: '$485.90', change: '+3.1%', isPos: true, icon: 'ph-chip', color: '#ccff00' }
+            {
+                name: 'Apple Inc.',
+                sub: 'AAPL',
+                price: '$182.50',
+                change: '+0.5%',
+                isPos: true,
+                icon: 'ph-apple-logo',
+                color: '#ccff00',
+                currency: 'USD',
+                series: {
+                    week: [178.4, 179.1, 177.9, 180.2, 181.6, 180.8, 182.1, 182.5],
+                    month: [171.5, 173.2, 170.8, 175.1, 176.4, 174.9, 178.3, 179.6, 177.2, 180.5, 183.2, 182.5],
+                    year: [142.2, 151.8, 149.4, 158.6, 165.3, 172.1, 168.4, 176.3, 181.4, 174.2, 179.5, 171.5, 178.3, 183.2, 186.5, 179.2, 184.8, 182.5]
+                }
+            },
+            {
+                name: 'Tesla',
+                sub: 'TSLA',
+                price: '$240.10',
+                change: '-1.2%',
+                isPos: false,
+                icon: 'ph-car',
+                color: '#ff4d00',
+                currency: 'USD',
+                series: {
+                    week: [258, 252, 248, 244, 246, 242, 239, 240.1],
+                    month: [272, 266, 260, 255, 248, 244, 239, 245, 241, 238, 236, 240.1],
+                    year: [312, 298, 286, 272, 255, 268, 284, 271, 256, 244, 236, 248, 242, 239, 232, 236, 228, 240.1]
+                }
+            },
+            {
+                name: 'NVIDIA',
+                sub: 'NVDA',
+                price: '$485.90',
+                change: '+3.1%',
+                isPos: true,
+                icon: 'ph-chip',
+                color: '#ccff00',
+                currency: 'USD',
+                series: {
+                    week: [462, 468, 471, 478, 482, 479, 486, 485.9],
+                    month: [438, 452, 445, 462, 474, 468, 479, 492, 486, 498, 502, 485.9],
+                    year: [310, 338, 352, 371, 388, 412, 436, 421, 456, 469, 438, 452, 479, 502, 528, 512, 498, 485.9]
+                }
+            }
         ]
+    };
+
+    const chartSizing = {
+        spark: { width: 120, height: 40, padding: 4 },
+        detail: { width: 320, height: 120, padding: 10 }
+    };
+
+    const formatCurrency = (value, currency) => {
+        const formatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency,
+            maximumFractionDigits: value < 1000 ? 2 : 0
+        });
+        return formatter.format(value);
+    };
+
+    const buildChartPaths = (series, width, height, padding) => {
+        const min = Math.min(...series);
+        const max = Math.max(...series);
+        const range = max - min || 1;
+        const step = (width - padding * 2) / (series.length - 1);
+
+        const points = series.map((value, index) => {
+            const x = padding + index * step;
+            const y = height - padding - ((value - min) / range) * (height - padding * 2);
+            return { x, y };
+        });
+
+        const line = points
+            .map((point, index) => `${index === 0 ? 'M' : 'L'}${point.x.toFixed(2)},${point.y.toFixed(2)}`)
+            .join(' ');
+
+        const area = [
+            `M${points[0].x.toFixed(2)},${(height - padding).toFixed(2)}`,
+            `L${points[0].x.toFixed(2)},${points[0].y.toFixed(2)}`,
+            ...points.slice(1).map(point => `L${point.x.toFixed(2)},${point.y.toFixed(2)}`),
+            `L${points[points.length - 1].x.toFixed(2)},${(height - padding).toFixed(2)}`,
+            'Z'
+        ].join(' ');
+
+        return { line, area };
+    };
+
+    const getSeriesStats = (series) => {
+        const min = Math.min(...series);
+        const max = Math.max(...series);
+        const start = series[0];
+        const end = series[series.length - 1];
+        const change = ((end - start) / start) * 100;
+        return { min, max, end, change };
     };
 
     toggleBtns.forEach(btn => {
@@ -138,11 +272,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const row = document.createElement('div');
             row.className = 'asset-row';
 
-            // Simple SVG graph path generation based on positive/negative
-            const graphColor = item.isPos ? 'var(--primary)' : 'var(--negative)';
-            const graphPath = item.isPos
-                ? 'M0,25 Q25,25 50,10 T100,5' // Upward trend
-                : 'M0,10 Q25,25 50,15 T100,28'; // Downward trend
+            const sparkSeries = item.series.week;
+            const sparkPaths = buildChartPaths(sparkSeries, chartSizing.spark.width, chartSizing.spark.height, chartSizing.spark.padding);
+            const detailPaths = buildChartPaths(item.series.month, chartSizing.detail.width, chartSizing.detail.height, chartSizing.detail.padding);
+            const sparkId = `spark-${type}-${item.sub}`;
+            const detailId = `detail-${type}-${item.sub}`;
+            const detailStats = getSeriesStats(item.series.month);
+
+            row.style.setProperty('--chart-color', item.color);
 
             row.innerHTML = `
                 <div class="asset-info">
@@ -153,16 +290,127 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
                 <div class="asset-graph">
-                    <svg width="100" height="30" viewBox="0 0 100 30">
-                        <path d="${graphPath}" fill="none" stroke="${graphColor}" stroke-width="2"/>
+                    <svg viewBox="0 0 ${chartSizing.spark.width} ${chartSizing.spark.height}" preserveAspectRatio="none" class="sparkline">
+                        <defs>
+                            <linearGradient id="${sparkId}" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="var(--chart-color)" stop-opacity="0.45" />
+                                <stop offset="100%" stop-color="var(--chart-color)" stop-opacity="0" />
+                            </linearGradient>
+                        </defs>
+                        <path class="sparkline-area" d="${sparkPaths.area}" fill="url(#${sparkId})"></path>
+                        <path class="sparkline-line" d="${sparkPaths.line}"></path>
                     </svg>
                 </div>
                 <div class="asset-values">
                     <div class="asset-price font-mono">${item.price}</div>
                     <div class="asset-change ${item.isPos ? 'positive' : 'negative'} font-mono">${item.change}</div>
                 </div>
+                <div class="asset-actions">
+                    <button class="asset-expand" type="button" aria-expanded="false">
+                        <span>Expand</span>
+                        <i class="ph ph-caret-down"></i>
+                    </button>
+                </div>
+                <div class="asset-detail">
+                    <div class="asset-detail-header">
+                        <div class="detail-title">Performance Signals</div>
+                        <div class="timeframe-toggle" role="tablist" aria-label="Select timeframe">
+                            <button class="timeframe-btn active" type="button" data-range="week">1W</button>
+                            <button class="timeframe-btn" type="button" data-range="month">1M</button>
+                            <button class="timeframe-btn" type="button" data-range="year">1Y</button>
+                        </div>
+                    </div>
+                    <div class="detail-chart">
+                        <svg viewBox="0 0 ${chartSizing.detail.width} ${chartSizing.detail.height}" preserveAspectRatio="none">
+                            <defs>
+                                <linearGradient id="${detailId}" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="var(--chart-color)" stop-opacity="0.5" />
+                                    <stop offset="100%" stop-color="var(--chart-color)" stop-opacity="0" />
+                                </linearGradient>
+                                <filter id="${detailId}-glow" x="-50%" y="-50%" width="200%" height="200%">
+                                    <feGaussianBlur stdDeviation="2.8" result="blur" />
+                                    <feMerge>
+                                        <feMergeNode in="blur" />
+                                        <feMergeNode in="SourceGraphic" />
+                                    </feMerge>
+                                </filter>
+                            </defs>
+                            <g class="chart-grid">
+                                <line x1="0" y1="30" x2="${chartSizing.detail.width}" y2="30"></line>
+                                <line x1="0" y1="60" x2="${chartSizing.detail.width}" y2="60"></line>
+                                <line x1="0" y1="90" x2="${chartSizing.detail.width}" y2="90"></line>
+                            </g>
+                            <path class="detail-area" d="${detailPaths.area}" fill="url(#${detailId})"></path>
+                            <path class="detail-line detail-glow" d="${detailPaths.line}" filter="url(#${detailId}-glow)"></path>
+                            <path class="detail-line" d="${detailPaths.line}"></path>
+                        </svg>
+                    </div>
+                    <div class="detail-stats">
+                        <div class="detail-stat">
+                            <span class="detail-stat-label">High</span>
+                            <span class="detail-stat-value detail-high font-mono">${formatCurrency(detailStats.max, item.currency)}</span>
+                        </div>
+                        <div class="detail-stat">
+                            <span class="detail-stat-label">Low</span>
+                            <span class="detail-stat-value detail-low font-mono">${formatCurrency(detailStats.min, item.currency)}</span>
+                        </div>
+                        <div class="detail-stat">
+                            <span class="detail-stat-label">Close</span>
+                            <span class="detail-stat-value detail-close font-mono">${formatCurrency(detailStats.end, item.currency)}</span>
+                        </div>
+                        <div class="detail-stat">
+                            <span class="detail-stat-label">Momentum</span>
+                            <span class="detail-stat-value detail-momentum font-mono">${detailStats.change >= 0 ? '+' : ''}${detailStats.change.toFixed(2)}%</span>
+                        </div>
+                    </div>
+                </div>
             `;
             portfolioList.appendChild(row);
+
+            const expandButton = row.querySelector('.asset-expand');
+            const timeframeButtons = row.querySelectorAll('.timeframe-btn');
+            const detailLine = row.querySelector('.detail-line:not(.detail-glow)');
+            const detailArea = row.querySelector('.detail-area');
+            const detailGlow = row.querySelector('.detail-glow');
+            const detailHigh = row.querySelector('.detail-high');
+            const detailLow = row.querySelector('.detail-low');
+            const detailClose = row.querySelector('.detail-close');
+            const detailMomentum = row.querySelector('.detail-momentum');
+
+            const updateDetail = (range) => {
+                const series = item.series[range];
+                const paths = buildChartPaths(series, chartSizing.detail.width, chartSizing.detail.height, chartSizing.detail.padding);
+                const stats = getSeriesStats(series);
+
+                detailLine.setAttribute('d', paths.line);
+                detailArea.setAttribute('d', paths.area);
+                if (detailGlow) {
+                    detailGlow.setAttribute('d', paths.line);
+                }
+
+                detailHigh.textContent = formatCurrency(stats.max, item.currency);
+                detailLow.textContent = formatCurrency(stats.min, item.currency);
+                detailClose.textContent = formatCurrency(stats.end, item.currency);
+                detailMomentum.textContent = `${stats.change >= 0 ? '+' : ''}${stats.change.toFixed(2)}%`;
+                detailMomentum.classList.toggle('positive', stats.change >= 0);
+                detailMomentum.classList.toggle('negative', stats.change < 0);
+            };
+
+            expandButton.addEventListener('click', () => {
+                const isExpanded = row.classList.toggle('expanded');
+                expandButton.setAttribute('aria-expanded', String(isExpanded));
+                expandButton.querySelector('span').textContent = isExpanded ? 'Collapse' : 'Expand';
+            });
+
+            timeframeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    timeframeButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    updateDetail(button.dataset.range);
+                });
+            });
+
+            updateDetail('month');
         });
     }
 
