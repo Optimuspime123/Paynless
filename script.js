@@ -62,13 +62,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const isCollapsed = appContainer.classList.contains('ai-collapsed');
 
         if (isMobileViewport) {
-            if (!isCollapsed) {
-                body.classList.add('ai-panel-active');
-            } else {
-                body.classList.remove('ai-panel-active');
+            // Only toggle if the state is actually different to avoid thrashing
+            const shouldBeActive = !isCollapsed;
+            if (body.classList.contains('ai-panel-active') !== shouldBeActive) {
+                body.classList.toggle('ai-panel-active', shouldBeActive);
             }
         } else {
-            body.classList.remove('ai-panel-active');
+            if (body.classList.contains('ai-panel-active')) {
+                body.classList.remove('ai-panel-active');
+            }
 
             if (isCollapsed) {
                 setAISidebarState(true);
@@ -314,7 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Image upload handling
-    function handleImageSelect(event) {
+    async function handleImageSelect(event) {
         const file = event.target.files[0];
         if (!file) return;
 
@@ -325,32 +327,48 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Validate file size (max 10MB)
-        if (file.size > 10 * 1024 * 1024) {
-            showToast('File Too Large', 'Please select an image under 10MB.', 'error');
-            addMessage('Image is too large. Please select an image under 10MB.', false);
-            return;
-        }
+        // Show a loading/processing toast
+        showToast('Processing', 'Compressing image...', 'info');
 
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            pendingImage = {
-                data: e.target.result.split(',')[1], // Base64 data without prefix
-                mimeType: file.type,
-                name: file.name
+        try {
+            // Options for compression
+            const options = {
+                maxSizeMB: 0.5,
+                maxWidthOrHeight: 1280,
+                useWebWorker: true
             };
 
-            // Update upload button to show image is attached
-            uploadBtn.classList.add('has-image');
-            uploadBtn.innerHTML = '<i class="ph ph-check"></i>';
-            uploadBtn.title = `Image attached: ${file.name}`;
+            // Compress the file
+            const compressedFile = await imageCompression(file, options);
 
-            // Update placeholder to indicate image is attached
-            chatInput.placeholder = `Image attached: ${file.name.substring(0, 20)}...`;
+            // Create a Blob URL for efficient preview (prevents UI lag)
+            const previewUrl = URL.createObjectURL(compressedFile);
 
-            showToast('Image Attached', file.name, 'success');
-        };
-        reader.readAsDataURL(file);
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                pendingImage = {
+                    data: e.target.result.split(',')[1], // Base64 data without prefix for API
+                    mimeType: compressedFile.type,
+                    name: file.name,
+                    blobUrl: previewUrl // Blob URL for local preview
+                };
+
+                // Update upload button to show image is attached
+                uploadBtn.classList.add('has-image');
+                uploadBtn.innerHTML = '<i class="ph ph-check"></i>';
+                uploadBtn.title = `Image attached: ${file.name}`;
+
+                // Update placeholder to indicate image is attached
+                chatInput.placeholder = `Image attached: ${file.name.substring(0, 20)}...`;
+
+                showToast('Image Attached', `${file.name} (${(compressedFile.size / 1024).toFixed(1)} KB)`, 'success');
+            };
+            reader.readAsDataURL(compressedFile);
+
+        } catch (error) {
+            console.error('Image compression failed:', error);
+            showToast('Error', 'Failed to process image', 'error');
+        }
     }
 
     function clearPendingImage() {
@@ -397,7 +415,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             let imageHtml = '';
             if (imageData) {
-                imageHtml = `<img src="data:${imageData.mimeType};base64,${imageData.data}" alt="Uploaded image" class="message-image">`;
+                // Prefer Blob URL for performance, fallback to base64 if needed
+                const src = imageData.blobUrl || `data:${imageData.mimeType};base64,${imageData.data}`;
+                imageHtml = `<img src="${src}" alt="Uploaded image" class="message-image">`;
             }
             msgDiv.innerHTML = `
                 ${imageHtml}
