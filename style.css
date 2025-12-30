@@ -817,17 +817,22 @@ body.ai-panel-active::before {
 
 .asset-row {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: 2.2fr 1.4fr 1fr auto;
     align-items: center;
     background: var(--bg-panel);
     border: 1px solid var(--border-color);
     padding: 1rem;
     border-radius: var(--radius-sm);
-    transition: background 0.2s;
+    gap: 1rem;
+    transition: background 0.2s, border-color 0.2s;
 }
 
 .asset-row:hover {
     background: var(--bg-sidebar);
+}
+
+.asset-row.expanded {
+    border-color: rgba(204, 255, 0, 0.35);
 }
 
 .asset-info {
@@ -846,6 +851,13 @@ body.ai-panel-active::before {
     align-items: center;
     justify-content: center;
     font-size: 1.2rem;
+    color: var(--text-main);
+}
+
+.asset-icon svg {
+    width: 26px;
+    height: 26px;
+    display: block;
 }
 
 .asset-name {
@@ -859,6 +871,184 @@ body.ai-panel-active::before {
 
 .asset-values {
     text-align: right;
+}
+
+.asset-graph {
+    width: 100%;
+}
+
+.asset-graph svg {
+    width: 100%;
+    height: 40px;
+    display: block;
+}
+
+.sparkline-line {
+    stroke: var(--chart-color);
+    stroke-width: 2;
+    fill: none;
+}
+
+.sparkline-area {
+    opacity: 0.85;
+}
+
+.asset-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.asset-expand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--bg-body);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.45rem 0.7rem;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.asset-expand i {
+    font-size: 0.9rem;
+    transition: transform 0.2s;
+}
+
+.asset-row.expanded .asset-expand i {
+    transform: rotate(180deg);
+}
+
+.asset-expand:hover {
+    border-color: var(--text-main);
+    transform: translateY(-1px);
+}
+
+.asset-detail {
+    grid-column: 1 / -1;
+    margin-top: 0.75rem;
+    background: var(--bg-body);
+    border: 1px solid var(--border-color);
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    display: none;
+    animation: reveal-detail 0.3s ease forwards;
+}
+
+.asset-row.expanded .asset-detail {
+    display: block;
+}
+
+.asset-detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.detail-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.timeframe-toggle {
+    display: inline-flex;
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    overflow: hidden;
+    background: var(--bg-panel);
+}
+
+.timeframe-btn {
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    padding: 0.4rem 0.7rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.timeframe-btn.active {
+    background: var(--text-main);
+    color: var(--bg-body);
+    font-weight: 700;
+}
+
+.detail-chart svg {
+    width: 100%;
+    height: 120px;
+    display: block;
+}
+
+.chart-grid line {
+    stroke: var(--border-color);
+    stroke-dasharray: 6 8;
+    opacity: 0.35;
+}
+
+.detail-line {
+    stroke: var(--chart-color);
+    stroke-width: 2.2;
+    fill: none;
+}
+
+.detail-glow {
+    opacity: 0.7;
+}
+
+.detail-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-top: 0.75rem;
+}
+
+.detail-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.detail-stat-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+}
+
+.detail-stat-value {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text-main);
+}
+
+.detail-stat-value.positive {
+    color: var(--positive);
+}
+
+.detail-stat-value.negative {
+    color: var(--negative);
+}
+
+@keyframes reveal-detail {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .asset-price {
@@ -1801,11 +1991,26 @@ body.ai-panel-active::before {
     }
 
     .asset-row {
-        grid-template-columns: 2fr 1fr;
+        grid-template-columns: 1fr;
     }
 
     .asset-graph {
-        display: none;
+        order: 2;
+    }
+
+    .asset-values {
+        text-align: left;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .asset-actions {
+        justify-content: flex-start;
+    }
+
+    .detail-chart svg {
+        height: 110px;
     }
 
     .subscriptions-grid {
