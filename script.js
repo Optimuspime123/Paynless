@@ -261,16 +261,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatWindow = document.getElementById('chatWindow');
     const imageInput = document.getElementById('imageInput');
     const uploadBtn = document.getElementById('uploadBtn');
-    
+
     // Multi-turn conversation history (loaded from storage)
     let conversationHistory = loadFromStorage(STORAGE_KEYS.conversationHistory, []);
-    
+
     // Current wallet balance (loaded from storage or default)
     let currentBalance = loadFromStorage(STORAGE_KEYS.balance, 124592);
-    
+
     // Track if AI is currently processing
     let isProcessing = false;
-    
+
     // Track pending image for upload
     let pendingImage = null;
 
@@ -281,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
-        
+
         let iconClass = 'ph-info';
         if (type === 'success') iconClass = 'ph-check-circle';
         if (type === 'error') iconClass = 'ph-warning-circle';
@@ -296,13 +296,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         container.appendChild(toast);
 
-        // Remove after 3 seconds
+        // Remove after 1.5 seconds
         setTimeout(() => {
             toast.classList.add('hiding');
             toast.addEventListener('animationend', () => {
                 toast.remove();
             });
-        }, 3000);
+        }, 1500);
     }
 
     // Initialize balance display from stored value
@@ -312,26 +312,26 @@ document.addEventListener('DOMContentLoaded', () => {
             balanceElement.textContent = formatBalance(currentBalance);
         }
     }
-    
+
     // Image upload handling
     function handleImageSelect(event) {
         const file = event.target.files[0];
         if (!file) return;
-        
+
         // Validate file type
         if (!file.type.startsWith('image/')) {
             showToast('Invalid File', 'Please select a valid image file.', 'error');
             addMessage('Please select a valid image file.', false);
             return;
         }
-        
+
         // Validate file size (max 10MB)
         if (file.size > 10 * 1024 * 1024) {
             showToast('File Too Large', 'Please select an image under 10MB.', 'error');
             addMessage('Image is too large. Please select an image under 10MB.', false);
             return;
         }
-        
+
         const reader = new FileReader();
         reader.onload = (e) => {
             pendingImage = {
@@ -339,20 +339,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 mimeType: file.type,
                 name: file.name
             };
-            
+
             // Update upload button to show image is attached
             uploadBtn.classList.add('has-image');
             uploadBtn.innerHTML = '<i class="ph ph-check"></i>';
             uploadBtn.title = `Image attached: ${file.name}`;
-            
+
             // Update placeholder to indicate image is attached
             chatInput.placeholder = `Image attached: ${file.name.substring(0, 20)}...`;
-            
+
             showToast('Image Attached', file.name, 'success');
         };
         reader.readAsDataURL(file);
     }
-    
+
     function clearPendingImage() {
         pendingImage = null;
         imageInput.value = '';
@@ -361,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
         uploadBtn.title = 'Upload receipt or bill';
         chatInput.placeholder = 'Ask anything...';
     }
-    
+
     // Setup image upload event listeners
     if (uploadBtn && imageInput) {
         uploadBtn.addEventListener('click', () => {
@@ -372,7 +372,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 imageInput.click();
             }
         });
-        
+
         imageInput.addEventListener('change', handleImageSelect);
     }
 
@@ -408,7 +408,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         chatWindow.appendChild(msgDiv);
         chatWindow.scrollTop = chatWindow.scrollHeight;
-        
+
         return msgDiv;
     }
 
@@ -427,10 +427,10 @@ document.addEventListener('DOMContentLoaded', () => {
             balanceElement.classList.add('balance-updated');
             setTimeout(() => balanceElement.classList.remove('balance-updated'), 600);
         }
-        
+
         // Save to localStorage
         saveToStorage(STORAGE_KEYS.balance, currentBalance);
-        
+
         // Recalculate earnings and spending from transactions
         updateWalletStats();
     }
@@ -438,10 +438,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateWalletStats() {
         const earnings = transactionData.filter(tx => tx.amount > 0).reduce((sum, tx) => sum + tx.amount, 0);
         const spending = Math.abs(transactionData.filter(tx => tx.amount < 0).reduce((sum, tx) => sum + tx.amount, 0));
-        
+
         const earningsElement = document.querySelector('.stat.positive .value');
         const spendingElement = document.querySelector('.stat.negative .value');
-        
+
         if (earningsElement) {
             earningsElement.textContent = `₹${earnings.toLocaleString('en-IN')}`;
         }
@@ -453,7 +453,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function addTransactionToData(transaction, skipBalanceUpdate = false) {
         const today = new Date();
         const dateStr = today.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-        
+
         const newTx = {
             name: transaction.name,
             date: dateStr,
@@ -461,22 +461,22 @@ document.addEventListener('DOMContentLoaded', () => {
             type: transaction.type || (transaction.amount >= 0 ? 'income' : 'expense'),
             icon: transaction.icon || (transaction.amount >= 0 ? 'ph-money' : 'ph-shopping-cart')
         };
-        
+
         // Add to beginning of array (most recent first)
         transactionData.unshift(newTx);
-        
+
         // Save transactions to localStorage
         saveToStorage(STORAGE_KEYS.transactions, transactionData);
-        
+
         // Update the balance (unless skip is specified, which happens when update_balance is also provided)
         if (!skipBalanceUpdate) {
             currentBalance += transaction.amount;
             updateBalanceUI(currentBalance);
         }
-        
+
         // Re-render transactions with animation
         renderTransactions();
-        
+
         // Highlight the new transaction
         setTimeout(() => {
             const firstItem = transactionList.querySelector('.transaction-item');
@@ -493,17 +493,17 @@ document.addEventListener('DOMContentLoaded', () => {
     function removeTransactionFromData(index) {
         if (index >= 0 && index < transactionData.length) {
             const removedTx = transactionData[index];
-            
+
             // Reverse the transaction effect on balance
             currentBalance -= removedTx.amount;
             updateBalanceUI(currentBalance);
-            
+
             // Remove the transaction
             transactionData.splice(index, 1);
-            
+
             // Save transactions to localStorage
             saveToStorage(STORAGE_KEYS.transactions, transactionData);
-            
+
             // Re-render
             renderTransactions();
 
@@ -513,15 +513,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function sendToAI(userMessage, imageData = null) {
         if (isProcessing) return;
-        
+
         isProcessing = true;
         sendBtn.disabled = true;
         chatInput.disabled = true;
         if (uploadBtn) uploadBtn.disabled = true;
-        
+
         // Add typing indicator
         addMessage('', false, true);
-        
+
         try {
             // Build request body
             const requestBody = {
@@ -531,7 +531,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 transactions: transactionData,
                 subscriptions: subscriptionsData,
             };
-            
+
             // Add image data if present
             if (imageData) {
                 requestBody.image = {
@@ -539,7 +539,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     mimeType: imageData.mimeType
                 };
             }
-            
+
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: {
@@ -549,53 +549,53 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const result = await response.json();
-            
+
             // Remove typing indicator
             removeTypingIndicator();
 
             if (result.success && result.data) {
                 const data = result.data;
-                
+
                 // Add AI response to chat
                 addMessage(data.response, false);
-                
+
                 // Update conversation history for multi-turn context
                 conversationHistory.push({ role: 'user', text: userMessage });
                 conversationHistory.push({ role: 'model', text: data.response });
-                
+
                 // Keep conversation history manageable (last 20 turns)
                 if (conversationHistory.length > 40) {
                     conversationHistory = conversationHistory.slice(-40);
                 }
-                
+
                 // Save conversation history to localStorage
                 saveToStorage(STORAGE_KEYS.conversationHistory, conversationHistory);
-                
+
                 // Handle structured actions
                 // If both update_balance and add_transaction are provided, use update_balance as authoritative
                 const hasExplicitBalanceUpdate = data.update_balance !== null && data.update_balance !== undefined;
-                
+
                 if (hasExplicitBalanceUpdate) {
                     updateBalanceUI(data.update_balance);
                     showToast('Balance Updated', `New balance: ${formatBalance(data.update_balance)}`, 'success');
                 }
-                
+
                 if (data.add_transaction) {
                     // Skip balance update in addTransactionToData if we already got an explicit balance update
                     addTransactionToData(data.add_transaction, hasExplicitBalanceUpdate);
                 }
-                
+
                 if (data.remove_transaction !== null && data.remove_transaction !== undefined) {
                     removeTransactionFromData(data.remove_transaction);
                 }
-                
+
             } else {
                 // Handle error response
                 const errorMsg = result.data?.response || result.error || 'Something went wrong. Please try again.';
                 addMessage(errorMsg, false);
                 showToast('Error', 'Failed to get a response from AI', 'error');
             }
-            
+
         } catch (error) {
             console.error('Chat error:', error);
             removeTypingIndicator();
@@ -612,11 +612,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function handleSend() {
         const text = chatInput.value.trim();
-        
+
         // Allow sending with just an image (with default prompt)
         if (!text && !pendingImage) return;
         if (isProcessing) return;
-        
+
         const messageText = text || 'Please analyze this image.';
         const imageToSend = pendingImage;
 

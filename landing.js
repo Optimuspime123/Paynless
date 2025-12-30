@@ -73,28 +73,40 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentIndex = 0;
     const WORD_DURATION = 2000;
 
-    function initCarousel() {
-        words.forEach((word, index) => {
+    function rotateCarousel() {
+        // Remove all classes first
+        words.forEach(word => {
             word.classList.remove('active', 'exit');
-            if (index === 0) word.classList.add('active');
         });
 
-        setInterval(() => {
-            const currentWord = words[currentIndex];
-            currentWord.classList.remove('active');
-            currentWord.classList.add('exit');
-
-            currentIndex = (currentIndex + 1) % words.length;
-            const nextWord = words[currentIndex];
-
-            setTimeout(() => {
-                currentWord.classList.remove('exit');
-                nextWord.classList.add('active');
-            }, 600);
-        }, WORD_DURATION);
+        // Set current word as active
+        words[currentIndex].classList.add('active');
     }
 
-    initCarousel();
+    function nextWord() {
+        const prevIndex = currentIndex;
+        currentIndex = (currentIndex + 1) % words.length;
+
+        // Exit current word
+        words[prevIndex].classList.remove('active');
+        words[prevIndex].classList.add('exit');
+
+        // Enter next word with a tiny delay to ensure smooth transition start
+        setTimeout(() => {
+            words[currentIndex].classList.add('active');
+        }, 50);
+
+        // Cleanup: Reset the previous word after its exit animation completes
+        setTimeout(() => {
+            words[prevIndex].classList.remove('exit');
+        }, 500);
+    }
+
+    // Initialize
+    rotateCarousel();
+
+    // Start the interval
+    setInterval(nextWord, WORD_DURATION);
 
 
     // --- GET STARTED BUTTON ---
