@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 price: '$145.20',
                 change: '-5.2%',
                 isPos: false,
-                icon: 'ph-currency-solana',
+                icon: 'ph-planet',
                 color: '#ff4d00',
                 currency: 'USD',
                 series: {
@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 price: '$485.90',
                 change: '+3.1%',
                 isPos: true,
-                icon: 'ph-chip',
+                icon: 'ph-cpu',
                 color: '#ccff00',
                 currency: 'USD',
                 series: {
