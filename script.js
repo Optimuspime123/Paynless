@@ -490,13 +490,15 @@ document.addEventListener('DOMContentLoaded', () => {
         showToast('Transaction Added', `${transaction.name}: ${formatBalance(transaction.amount)}`, 'success');
     }
 
-    function removeTransactionFromData(index) {
+    function removeTransactionFromData(index, skipBalanceUpdate = false) {
         if (index >= 0 && index < transactionData.length) {
             const removedTx = transactionData[index];
 
             // Reverse the transaction effect on balance
-            currentBalance -= removedTx.amount;
-            updateBalanceUI(currentBalance);
+            if (!skipBalanceUpdate) {
+                currentBalance -= removedTx.amount;
+                updateBalanceUI(currentBalance);
+            }
 
             // Remove the transaction
             transactionData.splice(index, 1);
@@ -586,7 +588,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 if (data.remove_transaction !== null && data.remove_transaction !== undefined) {
-                    removeTransactionFromData(data.remove_transaction);
+                    removeTransactionFromData(data.remove_transaction, hasExplicitBalanceUpdate);
                 }
 
             } else {
